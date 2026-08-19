@@ -53,4 +53,4 @@ class DoneState(BaseState):
                 settings.VIRTUAL_HEIGHT / 2 - settings.BALL_SIZE / 2,
             )
             pong.serving_player = 2 if pong.winning_player == 1 else 1
-            self.state_machine.change("serve", pong=pong)
+            self.state_machine.change("title", pong=pong)

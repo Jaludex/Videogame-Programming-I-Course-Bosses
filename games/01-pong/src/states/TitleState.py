@@ -28,7 +28,7 @@ class TitleState(BaseState):
         render_table(surface, self.pong)
         render_text(
             surface,
-            "Press enter to start",
+            "Select an option:",
             settings.FONTS["large"],
             settings.VIRTUAL_WIDTH / 2,
             settings.VIRTUAL_HEIGHT / 2,
@@ -36,7 +36,21 @@ class TitleState(BaseState):
             center=True,
         )
 
+        render_text(
+            surface,
+            "1- Play against a friend 2- Play against a bot.",
+            settings.FONTS["large"],
+            settings.VIRTUAL_WIDTH / 2,
+            settings.VIRTUAL_HEIGHT / 2 + 30,
+            settings.COLOR_WHITE,
+            center=True,
+                        )
+
     def on_input(self, input_id: str, input_data: InputData) -> None:
-        if input_id == "confirm" and input_data.pressed:
+        if input_id in ("select_1", "select_2") and input_data.pressed:
             self.pong.serving_player = random.randint(1, 2)
-            self.state_machine.change("serve", pong=self.pong)
+
+            if input_id == "select_1":
+                self.state_machine.change("serve", pong=self.pong, against_bot=False)
+            else:
+                self.state_machine.change("serve", pong=self.pong, against_bot=True)

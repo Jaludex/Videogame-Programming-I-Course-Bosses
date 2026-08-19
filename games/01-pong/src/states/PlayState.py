@@ -106,7 +106,7 @@ class PlayState(BaseState):
             settings.VIRTUAL_WIDTH / 2 - settings.BALL_SIZE / 2,
             settings.VIRTUAL_HEIGHT / 2 - settings.BALL_SIZE / 2,
         )
-        self.state_machine.change("serve", pong=pong)
+        self.state_machine.change("serve", pong=pong, against_bot=self.against_bot)
 
     def render(self, surface: pygame.Surface) -> None:
         render_table(surface, self.pong)
