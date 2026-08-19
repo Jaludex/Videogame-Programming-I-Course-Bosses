@@ -56,9 +56,9 @@ class PlayState(BaseState):
 
         # The bot logic
         if self.against_bot:
-            if pong.ball.y > player2_rect.center[1] + settings.PADDLE_HEIGHT * 0.10:
+            if pong.ball.y > player2_rect.center[1] + settings.PADDLE_HEIGHT * 0.20 and pong.ball.vx > 0:
                 pong.player2.vy = settings.PADDLE_SPEED
-            elif pong.ball.y < player2_rect.center[1] - settings.PADDLE_HEIGHT * 0.10:
+            elif pong.ball.y < player2_rect.center[1] - settings.PADDLE_HEIGHT * 0.20 and pong.ball.vx > 0:
                 pong.player2.vy = -settings.PADDLE_SPEED
             else:
                 pong.player2.vy = 0
