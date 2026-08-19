@@ -18,8 +18,8 @@ from gale import input_handler
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "confirm")
-input_handler.InputHandler.set_keyboard_action(input_handler.KEY_UP, "p1_up")
-input_handler.InputHandler.set_keyboard_action(input_handler.KEY_DOWN, "p1_down")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_w, "p1_up")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_s, "p1_down")
 
 TITLE = "Pong"
 

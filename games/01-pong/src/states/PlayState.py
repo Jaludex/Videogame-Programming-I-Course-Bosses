@@ -62,7 +62,6 @@ class PlayState(BaseState):
         else:
             pong.player2.vy = 0
 
-        print(pong.player2.vy)
 
         if ball_rect.colliderect(player1_rect):
             settings.SOUNDS["paddle_hit"].play()
