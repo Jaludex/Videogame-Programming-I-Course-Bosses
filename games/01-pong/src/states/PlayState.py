@@ -20,8 +20,9 @@ from src.rendering import render_table
 
 
 class PlayState(BaseState):
-    def enter(self, pong) -> None:
+    def enter(self, pong, against_bot) -> None:
         self.pong = pong
+        self.against_bot = against_bot
 
     def update(self, dt: float) -> None:
         pong = self.pong
@@ -53,14 +54,14 @@ class PlayState(BaseState):
         player1_rect = pong.player1.get_rect()
         player2_rect = pong.player2.get_rect()
 
-        # The bot thing
-
-        if pong.ball.y > player2_rect.center[1] + settings.PADDLE_HEIGHT * 0.10:
-            pong.player2.vy = settings.PADDLE_SPEED
-        elif pong.ball.y < player2_rect.center[1] - settings.PADDLE_HEIGHT * 0.10:
-            pong.player2.vy = -settings.PADDLE_SPEED
-        else:
-            pong.player2.vy = 0
+        # The bot logic
+        if self.against_bot:
+            if pong.ball.y > player2_rect.center[1] + settings.PADDLE_HEIGHT * 0.10:
+                pong.player2.vy = settings.PADDLE_SPEED
+            elif pong.ball.y < player2_rect.center[1] - settings.PADDLE_HEIGHT * 0.10:
+                pong.player2.vy = -settings.PADDLE_SPEED
+            else:
+                pong.player2.vy = 0
 
 
         if ball_rect.colliderect(player1_rect):
@@ -122,4 +123,13 @@ class PlayState(BaseState):
                 sign = -1 if input_id == "p1_up" else 1
                 if pong.player1.vy == sign * settings.PADDLE_SPEED:
                     pong.player1.vy = 0
+        elif (not self.against_bot) and input_id in ("p2_up", "p2_down"):
+            if input_data.pressed:
+                pong.player2.vy = (
+                    -settings.PADDLE_SPEED if input_id == "p2_up" else settings.PADDLE_SPEED
+                )
+            elif input_data.released:
+                sign = -1 if input_id == "p2_up" else 1
+                if pong.player2.vy == sign * settings.PADDLE_SPEED:
+                    pong.player2.vy = 0
 
