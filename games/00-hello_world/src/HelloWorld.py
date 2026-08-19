@@ -20,7 +20,8 @@ import settings
 
 class HelloWorld(Game):
     def init(self) -> None:
-        pass
+        self.available_text_colors = ((255, 0, 0), (0, 255, 0), (0, 0, 255))
+        self.text_color_idx = 0
 
     def update(self, dt: float) -> None:
         pass
@@ -33,10 +34,14 @@ class HelloWorld(Game):
             settings.FONTS["default"],
             settings.VIRTUAL_WIDTH / 2,
             settings.VIRTUAL_HEIGHT / 2,
-            (255, 255, 255),
+            self.available_text_colors[self.text_color_idx],
             center=True,
         )
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "quit" and input_data.pressed:
             self.quit()
+        elif input_data.pressed:
+            self.text_color_idx += 1
+            if self.text_color_idx >= len(self.available_text_colors):
+                self.text_color_idx = 0

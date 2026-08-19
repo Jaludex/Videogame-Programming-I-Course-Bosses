@@ -20,6 +20,7 @@ import pygame
 from gale import input_handler
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_b, "change_color")
 
 TITLE = "Hello World"
 
