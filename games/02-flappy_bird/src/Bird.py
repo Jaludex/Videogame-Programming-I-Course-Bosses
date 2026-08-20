@@ -9,6 +9,7 @@ This file contains the definition of the class Bird.
 """
 
 import pygame
+import math
 
 import settings
 
@@ -21,6 +22,7 @@ class Bird:
         self.height: float = height
         self.vy: float = 0.0
         self.jumping: bool = False
+        self.angle = 0
 
     def get_rect(self) -> pygame.Rect:
         return pygame.Rect(round(self.x), round(self.y), self.width, self.height)
@@ -38,5 +40,12 @@ class Bird:
 
         self.y += self.vy * dt
 
+        self.angle = math.atan2(self.vy, settings.MAIN_SCROLL_SPEED)
+
     def render(self, surface: pygame.Surface) -> None:
-        surface.blit(settings.TEXTURES["bird"], self.get_rect())
+        
+        rotated_texture = pygame.transform.rotate(settings.TEXTURES["bird"], -math.degrees(self.angle) * 0.5)
+
+        rotated_rect = rotated_texture.get_rect(center=self.get_rect().center)
+
+        surface.blit(rotated_texture, rotated_rect)
