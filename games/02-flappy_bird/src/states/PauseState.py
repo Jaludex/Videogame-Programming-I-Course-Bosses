@@ -16,6 +16,9 @@ class PauseState(BaseState):
         self.world = world if world is not None else World()
         self.score = score
         self.bird = bird
+        pygame.mixer.music.pause()
+        settings.SOUNDS["pause"].stop()
+        settings.SOUNDS["pause"].play()
 
     def update(self, dt: float) -> None:
         pass
@@ -46,9 +49,11 @@ class PauseState(BaseState):
             shadowed=True,
         )
 
+    def exit(self):
+        settings.SOUNDS["pause"].stop()
+        settings.SOUNDS["pause"].play()
+        pygame.mixer.music.unpause()
+
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "pause" and input_data.pressed:
-            settings.SOUNDS["pause"].stop()
-            settings.SOUNDS["pause"].play()
-            pygame.mixer.music.play(loops=-1)
             self.state_machine.change("playing", world=self.world, score=self.score, bird=self.bird)

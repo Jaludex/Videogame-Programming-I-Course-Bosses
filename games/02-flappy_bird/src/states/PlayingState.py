@@ -64,7 +64,4 @@ class PlayingState(BaseState):
         if input_id == "jump" and input_data.pressed:
             self.bird.jump()
         if input_id == "pause" and input_data.pressed:
-            pygame.mixer.music.stop()
-            settings.SOUNDS["pause"].stop()
-            settings.SOUNDS["pause"].play()
             self.state_machine.change("pause", world=self.world, score=self.score, bird=self.bird)
