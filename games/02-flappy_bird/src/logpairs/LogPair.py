@@ -14,7 +14,6 @@ import pygame
 
 import settings
 
-
 class LogPair:
     def __init__(self, x: float, y: float) -> None:
         self.x: float = x

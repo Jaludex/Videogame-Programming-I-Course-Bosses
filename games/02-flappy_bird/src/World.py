@@ -10,54 +10,41 @@ background/ground, and the log pairs the bird must fly through.
 """
 
 import random
-from typing import List
+from typing import List, Optional
 
 import pygame
 
 from gale.factory import Factory
 
 import settings
-from src.LogPair import LogPair
+from src.logpairs import LogPair
+from src.logpairs import MovingLogPair
+from src.modes import GameModeStrat
 
 
 class World:
-    def __init__(self, generate_logs: bool = False) -> None:
-        self.generate_logs: bool = generate_logs
+    def __init__(self) -> None:
         self.background_x: float = 0.0
         self.ground_x: float = 0.0
         self.logs: List[LogPair] = []
-        self.logs_spawn_timer: float = 0.0
-        self.last_log_y: float = -settings.LOG_HEIGHT + random.randint(0, 80) + 20
-        self.log_pair_factory: Factory = Factory(LogPair)
 
     def reset(self, generate_logs: bool) -> None:
         self.generate_logs = generate_logs
 
-    def collides(self, rect: pygame.Rect) -> bool:
-        if rect.bottom >= settings.VIRTUAL_HEIGHT:
+    def collides_with_border(self, rect: pygame.Rect) -> bool:
+        if rect.bottom >= settings.VIRTUAL_HEIGHT or rect.top <= 0 or rect.left <= 0 or rect.right >= settings.VIRTUAL_WIDTH:
             return True
 
+    def collides_with_log(self, rect: pygame.Rect):
         return any(log_pair.collides(rect) for log_pair in self.logs)
 
     def update_scored(self, rect: pygame.Rect) -> bool:
         return any(log_pair.update_scored(rect) for log_pair in self.logs)
 
+    def append_log(self, log: LogPair) -> None:
+        self.logs.append(log)
+
     def update(self, dt: float) -> None:
-        if self.generate_logs:
-            self.logs_spawn_timer += dt
-
-            if self.logs_spawn_timer >= settings.TIME_TO_SPAWN_LOGS:
-                self.logs_spawn_timer = 0.0
-                y = max(
-                    -settings.LOG_HEIGHT + 10,
-                    min(
-                        self.last_log_y + random.randint(-20, 20),
-                        settings.VIRTUAL_HEIGHT + 90 - settings.LOG_HEIGHT,
-                    ),
-                )
-                self.last_log_y = y
-                self.logs.append(self.log_pair_factory.create(settings.VIRTUAL_WIDTH, y))
-
         self.background_x += -settings.BACK_SCROLL_SPEED * dt
 
         if self.background_x <= -settings.BACKGROUND_LOOPING_POINT:

@@ -9,11 +9,13 @@ from gale.text import render_text
 import settings
 from src.World import World
 from src.Bird import Bird
+from src.modes import GameModeStrat
 
 
 class PauseState(BaseState):
-    def enter(self, world: Optional[World] = None, score: Optional[int] = 0, bird: Optional[Bird] = None) -> None:
+    def enter(self, world: Optional[World] = None, score: Optional[int] = 0, bird: Optional[Bird] = None, gamemode: GameModeStrat = None) -> None:
         self.world = world if world is not None else World()
+        self.gamemode = gamemode
         self.score = score
         self.bird = bird
         pygame.mixer.music.pause()
@@ -56,4 +58,4 @@ class PauseState(BaseState):
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "pause" and input_data.pressed:
-            self.state_machine.change("playing", world=self.world, score=self.score, bird=self.bird)
+            self.state_machine.change("playing", world=self.world, score=self.score, bird=self.bird, gamemode=self.gamemode)

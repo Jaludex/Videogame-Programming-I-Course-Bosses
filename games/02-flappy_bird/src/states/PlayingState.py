@@ -19,10 +19,12 @@ from gale.text import render_text
 import settings
 from src.Bird import Bird
 from src.World import World
+from src.modes import GameModeStrat
 
 
 class PlayingState(BaseState):
-    def enter(self, world: Optional[World] = None, bird: Optional[Bird] = None, score: Optional[int] = None) -> None:
+    def enter(self, world: Optional[World] = None, bird: Optional[Bird] = None, score: Optional[int] = None,  gamemode: Optional[GameModeStrat] = None) -> None:
+        self.gamemode = gamemode
         self.world = world if world is not None else World()
         self.world.reset(True)
         self.bird = bird if bird is not None else Bird(
@@ -35,12 +37,18 @@ class PlayingState(BaseState):
 
     def update(self, dt: float) -> None:
         self.bird.update(dt)
+
+        self.gamemode.update(dt, self.bird, self.world)
+
+        if self.gamemode.should_generate_log():
+            self.world.append_log(self.gamemode.new_log())
+
         self.world.update(dt)
 
-        if self.world.collides(self.bird.get_rect()):
+        if (self.gamemode.can_collide(self.bird) and self.world.collides_with_log(self.bird.get_rect())) or self.world.collides_with_border(self.bird.get_rect()):
             settings.SOUNDS["explosion"].play()
             settings.SOUNDS["hurt"].play()
-            self.state_machine.change("gameover", world=self.world, score=self.score, bird=self.bird)
+            self.state_machine.change("gameover", world=self.world, score=self.score, bird=self.bird, gamemode=self.gamemode)
             return
 
         if self.world.update_scored(self.bird.get_rect()):
@@ -49,6 +57,7 @@ class PlayingState(BaseState):
 
     def render(self, surface: pygame.Surface) -> None:
         self.world.render(surface)
+        self.gamemode.render(surface)
         self.bird.render(surface)
         render_text(
             surface,
@@ -61,7 +70,7 @@ class PlayingState(BaseState):
         )
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
-        if input_id == "jump" and input_data.pressed:
-            self.bird.jump()
         if input_id == "pause" and input_data.pressed:
-            self.state_machine.change("pause", world=self.world, score=self.score, bird=self.bird)
+            self.state_machine.change("pause", world=self.world, score=self.score, bird=self.bird, gamemode=self.gamemode)
+        else:
+            self.gamemode.on_input(input_id, input_data, self.bird)

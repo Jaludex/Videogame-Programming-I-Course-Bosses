@@ -15,11 +15,13 @@ from gale.text import render_text
 
 import settings
 from src.World import World
+from src.modes import GameModeStrat
 
 
 class CountDownState(BaseState):
-    def enter(self) -> None:
-        self.world = World(generate_logs=False)
+    def enter(self, gamemode: GameModeStrat) -> None:
+        self.world = World()
+        self.gamemode = gamemode
         self.counter = 3
         self.timer = 0.0
 
@@ -31,7 +33,7 @@ class CountDownState(BaseState):
             self.counter -= 1
 
             if self.counter == 0:
-                self.state_machine.change("playing", world=self.world)
+                self.state_machine.change("playing", world=self.world, gamemode=self.gamemode)
                 return
 
         self.world.update(dt)

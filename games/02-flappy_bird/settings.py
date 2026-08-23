@@ -21,6 +21,12 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_p, "pause")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "confirm")
 input_handler.InputHandler.set_mouse_click_action(input_handler.MOUSE_BUTTON_1, "jump")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "jump")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_LEFT, "move_left")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RIGHT, "move_right")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_a, "move_left")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_d, "move_right")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_1, "option_1")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_2, "option_2")
 
 TITLE = "Flappy Bird"
 
@@ -48,6 +54,14 @@ BACK_SCROLL_SPEED = 50  # MAIN_SCROLL_SPEED / 2
 
 GRAVITY = 980
 JUMP_TAKEOFF_SPEED = GRAVITY / 6
+BIRD_X_MOVEMENT_SPEED = 100
+
+CLOSING_LOGS_SPEED = 60
+
+TIME_TO_SPAWN_POWERUP = 5
+POWERUP_DURATION = 10
+POWERUP_BAR_WIDTH = 70
+POWERUP_BAR_HEIGHT = 15
 
 TIME_TO_SPAWN_LOGS = 1.5
 
@@ -62,6 +76,8 @@ TEXTURES = {
     "background": pygame.image.load(BASE_DIR / "assets" / "graphics" / "background.png"),
     "ground": pygame.image.load(BASE_DIR / "assets" / "graphics" / "ground.png"),
     "log": pygame.image.load(BASE_DIR / "assets" / "graphics" / "log.png"),
+    "ghostpill": pygame.image.load(BASE_DIR / "assets" / "graphics" / "ghostpill.png"),
+    "bird_invincible": pygame.image.load(BASE_DIR / "assets" / "graphics" / "bird_invincible.png"),
 }
 # The top log of every pair is the same image, flipped upside down.
 TEXTURES["log_inverted"] = pygame.transform.flip(TEXTURES["log"], False, True)
@@ -72,9 +88,18 @@ SOUNDS = {
     "hurt": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "hurt.wav"),
     "score": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "score.wav"),
     "pause": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "mario_pause.wav"),
+    "wood_press":  pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "wood_press.wav"),
 }
 
-pygame.mixer.music.load(BASE_DIR / "assets" / "sounds" / "marios_way.ogg")
+SOUNDS["wood_press"].set_volume(0.3)
+
+MUSICS = {
+    "main": BASE_DIR / "assets" / "sounds" / "marios_way.ogg",
+    "invincible": BASE_DIR / "assets" / "sounds" / "invincible.ogg"
+}
+pygame.mixer.music.load(MUSICS["main"])
+
+pygame.mixer.music.set_volume(0.5)
 
 FONTS = {
     "medium": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", MEDIUM_TEXT_SIZE),
@@ -86,3 +111,4 @@ FONTS = {
 
 COLOR_BACKGROUND = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
+COLOR_GREEN = (0, 255, 0)

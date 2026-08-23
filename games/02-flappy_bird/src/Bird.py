@@ -21,8 +21,10 @@ class Bird:
         self.width: float = width
         self.height: float = height
         self.vy: float = 0.0
+        self.vx: float = 0
         self.jumping: bool = False
         self.angle = 0
+        self.invincible = False
 
     def get_rect(self) -> pygame.Rect:
         return pygame.Rect(round(self.x), round(self.y), self.width, self.height)
@@ -39,12 +41,15 @@ class Bird:
             self.jumping = False
 
         self.y += self.vy * dt
+        self.x += self.vx * dt
 
         self.angle = math.atan2(self.vy, settings.MAIN_SCROLL_SPEED)
 
     def render(self, surface: pygame.Surface) -> None:
-        
-        rotated_texture = pygame.transform.rotate(settings.TEXTURES["bird"], -math.degrees(self.angle) * 0.5)
+        texture_key = "bird"
+        if self.invincible:
+            texture_key = "bird_invincible"
+        rotated_texture = pygame.transform.rotate(settings.TEXTURES[texture_key], -math.degrees(self.angle) * 0.5)
 
         rotated_rect = rotated_texture.get_rect(center=self.get_rect().center)
 
