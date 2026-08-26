@@ -23,6 +23,7 @@ class Ball:
         self.y = y
         self.width = 8
         self.height = 8
+        self.sticked = False
 
         self.vx = 0
         self.vy = 0

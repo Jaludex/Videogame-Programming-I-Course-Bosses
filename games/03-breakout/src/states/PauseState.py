@@ -18,6 +18,9 @@ class PauseState(BaseState):
         self.live_factor = params["live_factor"]
         self.points_to_next_live = params["points_to_next_live"]
         self.powerups = params["powerups"]
+        self.sticky_paddle_timer: float = params.get("sticky_paddle_timer", 0)
+        self.bazooka_timer: float  = params.get("bazooka_timer", 0)
+        self.rockets = params.get("rockets", [])
         settings.SOUNDS["pause"].play()
 
     def render(self, surface: pygame.Surface) -> None:
@@ -75,5 +78,8 @@ class PauseState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
                 powerups=self.powerups,
+                bazooka_timer = self.bazooka_timer,
+                sticky_paddle_timer = self.sticky_paddle_timer,
+                rockets = self.rockets,
                 resume=True,
             )

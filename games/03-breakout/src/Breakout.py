@@ -36,6 +36,7 @@ class Breakout(Game):
         )
         self.state_machine.change("start")
         pygame.mixer_music.load(settings.BASE_DIR / "assets" / "sounds" / "music.ogg")
+        pygame.mixer_music.set_volume(0.3)
         pygame.mixer_music.play(loops=-1)
 
     def update(self, dt: float) -> None:

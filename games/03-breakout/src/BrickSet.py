@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 
 import pygame
 
@@ -51,11 +51,18 @@ class Brickset:
             return brick
 
         # return top-right
-        brick = self.get_brick(bottom_row, left_col)
+        brick = self.get_brick(bottom_row, right_col)
         if brick is not None and not brick.broken:
             return brick
 
         return None
+
+    def get_colliding_bricks_in_rect(self, rect: pygame.Rect) -> List[Brick]:
+        colliding = []
+        for brick in self.bricks.values():
+            if not brick.broken and brick.get_collision_rect().colliderect(rect):
+                colliding.append(brick)
+        return colliding
 
     def update(self, dt: float) -> None:
         to_del = []

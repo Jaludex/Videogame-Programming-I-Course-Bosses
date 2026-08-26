@@ -31,6 +31,7 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RIGHT, "move_ri
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_DOWN, "move_down")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_LEFT, "move_left")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "pause")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_f, "fire_bazooka")
 
 TITLE = "Breakout"
 
@@ -52,6 +53,13 @@ LIVE_POINTS_BASE = 2000
 PADDLE_GROW_UP_POINTS = 200
 
 POWERUP_SPEED = 50
+ROCKET_ACCELERATION = -100
+
+BAZOOKA_TIME = 8
+STICLY_PADDLE_TIME = 10
+
+POWERUP_BAR_WIDTH = 60
+POWERUP_BAR_HEIGHT = 10
 
 BASE_DIR = Path(__file__).parent
 
@@ -73,6 +81,10 @@ SOUNDS = {
     "life": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "life.wav"),
     "grow_up": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "grow_up.wav"),
     "pause": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "pause.wav"),
+    "grab_bazooka": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "grab_bazooka.wav"),
+    "fire_bazooka": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "fire_bazooka.wav"),
+    "rocket_hit": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "rocket_hit.wav"),
+    "grab_sticky_paddle": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "grab_sticky_paddle.wav"),
 }
 
 TEXTURES = {
@@ -91,6 +103,8 @@ FRAMES = {
     "hearts": generate_frames(TEXTURES["hearts"], 10, 9),
     "arrows": generate_frames(TEXTURES["arrows"], 24, 24),
     "powerups": generate_powerups_frames(),
+    "bazooka": pygame.Rect(0, 208, 16, 32),
+    "rocket": pygame.Rect(16, 208, 10, 16)
 }
 
 FONTS = {
@@ -99,3 +113,6 @@ FONTS = {
     "medium": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", 12),
     "large": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", 24),
 }
+
+COLOR_GREEN = (0, 255, 0)
+COLOR_BLUE = (0, 0, 255)

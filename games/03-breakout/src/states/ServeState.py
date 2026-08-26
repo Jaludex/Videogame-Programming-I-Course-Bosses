@@ -103,6 +103,8 @@ class ServeState(BaseState):
                 brickset=self.brickset,
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
+                bazooka_timer = 0,
+                sticky_paddle_timer = 0,
             )
 
         if input_id == "move_left":
