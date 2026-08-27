@@ -83,3 +83,11 @@ def generate_powerups_frames() -> List[pygame.Rect]:
         frames.append(pygame.Rect(j * 16, y, 16, 16))
 
     return frames
+
+def generate_safety_net_frames() -> List[pygame.Rect]:
+    y = 80
+    frames = []
+    for i in range(0, 4):
+        frames.append(pygame.Rect(17, y + (i*32), 48, 16))
+
+    return frames

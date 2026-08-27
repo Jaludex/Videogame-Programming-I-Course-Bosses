@@ -49,6 +49,7 @@ class PlayState(BaseState):
 
         self.sticky_paddle_timer: float = params.get("sticky_paddle_timer", 0)
         self.bazooka_timer: float  = params.get("bazooka_timer", 0)
+        self.safety_net_timer:float = params.get("safety_net_timer", 0)
         self.rockets: List[Rocket] = params.get("rockets", [])
         self.rocket_factory = Factory(Rocket)
 
@@ -61,6 +62,9 @@ class PlayState(BaseState):
         if self.sticky_paddle_timer > 0:
             self.sticky_paddle_timer -= dt
 
+        if self.safety_net_timer > 0:
+            self.safety_net_timer -= dt
+
         for ball in self.balls:
             if self.sticky_paddle_timer <= 0 and ball.sticked:
                 self.push_sticked_ball(ball)
@@ -69,6 +73,13 @@ class PlayState(BaseState):
                 ball.vx = self.paddle.vx
             
             ball.update(dt)
+
+            if self.safety_net_timer > 0 and ball.y + ball.height >= settings.SAFETY_NET_HEIGHT:
+                ball.vy *= -1
+                ball.y = settings.SAFETY_NET_HEIGHT - ball.height
+                settings.SOUNDS["paddle_hit"].stop()
+                settings.SOUNDS["paddle_hit"].play()
+
             ball.solve_world_boundaries()
 
             # Check collision with the paddle
@@ -199,10 +210,11 @@ class PlayState(BaseState):
             rocket.render(surface)
 
         if self.bazooka_timer > 0:
-            surface.blit(settings.TEXTURES["spritesheet"], (5, 2), settings.FRAMES["powerups"][4])
             surface.blit(settings.TEXTURES["spritesheet"], (self.paddle.x - 15, self.paddle.y - 8), settings.FRAMES["bazooka"])
             surface.blit(settings.TEXTURES["spritesheet"], (self.paddle.x - 1 + self.paddle.width, self.paddle.y - 8), settings.FRAMES["bazooka"])
 
+            surface.blit(settings.TEXTURES["spritesheet"], (5, 2), settings.FRAMES["powerups"][4])
+            
             bar_width: int = settings.POWERUP_BAR_WIDTH * (1 - ((settings.BAZOOKA_TIME - self.bazooka_timer) / settings.BAZOOKA_TIME))
             bar_rect = pygame.Surface((bar_width, int(settings.POWERUP_BAR_HEIGHT)))
             bar_rect.fill(settings.COLOR_BLUE)
@@ -217,6 +229,20 @@ class PlayState(BaseState):
             bar_rect = pygame.Surface((bar_width, int(settings.POWERUP_BAR_HEIGHT)))
             bar_rect.fill(settings.COLOR_GREEN)
             surface.blit(bar_rect, (sticky_bar_x, 5))
+
+        if self.safety_net_timer > 0:
+            for i in range(0, 9):
+                surface.blit(settings.TEXTURES["spritesheet"], (i * 48, settings.SAFETY_NET_HEIGHT), settings.FRAMES["safety_net"][self.paddle.skin])
+
+            safety_net_icon_x = 57 + (settings.POWERUP_BAR_WIDTH * 2)
+            surface.blit(settings.TEXTURES["spritesheet"], (safety_net_icon_x, 2), settings.FRAMES["powerups"][6])
+
+            safety_net_bar_x = 77 + (settings.POWERUP_BAR_WIDTH * 2)
+            bar_width: int = settings.POWERUP_BAR_WIDTH * (1 - ((settings.SAFETY_NET_TIME - self.safety_net_timer) / settings.SAFETY_NET_TIME))
+            bar_rect = pygame.Surface((bar_width, int(settings.POWERUP_BAR_HEIGHT)))
+            bar_rect.fill(settings.COLOR_ORANGE)
+            surface.blit(bar_rect, (safety_net_bar_x, 5))
+        
 
         for ball in self.balls:
             ball.render(surface)
@@ -249,6 +275,7 @@ class PlayState(BaseState):
                 powerups=self.powerups,
                 bazooka_timer = self.bazooka_timer,
                 sticky_paddle_timer = self.sticky_paddle_timer,
+                safety_net_timer = self.safety_net_timer,
                 rockets = self.rockets
             )
         elif input_id == "enter" and input_data.pressed:
@@ -266,12 +293,14 @@ class PlayState(BaseState):
     def roll_for_powerup(self, brick):
         rolled_number = random.random()
         key_to_append: str = "none"
-        if rolled_number <= 0.15:
-            rolled_number = random.randint(0, 3)
+        if rolled_number <= 0.1:
+            rolled_number = random.randint(0, 4)
             if rolled_number <= 1:
                 key_to_append = "TwoMoreBall"
             elif rolled_number == 2:
                 key_to_append = "StickyPaddle"
+            elif rolled_number == 3:
+                key_to_append = "SafetyNet"
             else:
                 key_to_append = "Bazooka"
         if key_to_append != "none":

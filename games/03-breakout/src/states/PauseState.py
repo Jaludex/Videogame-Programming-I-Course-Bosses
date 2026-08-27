@@ -20,6 +20,7 @@ class PauseState(BaseState):
         self.powerups = params["powerups"]
         self.sticky_paddle_timer: float = params.get("sticky_paddle_timer", 0)
         self.bazooka_timer: float  = params.get("bazooka_timer", 0)
+        self.safety_net_timer:float = params.get("safety_net_timer", 0)
         self.rockets = params.get("rockets", [])
         settings.SOUNDS["pause"].play()
 
@@ -80,6 +81,7 @@ class PauseState(BaseState):
                 powerups=self.powerups,
                 bazooka_timer = self.bazooka_timer,
                 sticky_paddle_timer = self.sticky_paddle_timer,
+                safety_net_timer = self.safety_net_timer,
                 rockets = self.rockets,
                 resume=True,
             )

@@ -12,5 +12,6 @@ from src.powerups.PowerUp import PowerUp
 from src.powerups.TwoMoreBall import TwoMoreBall
 from src.powerups.Bazooka import Bazooka
 from src.powerups.StickyPaddle import StickyPaddle
+from src.powerups.SafetyNet import SafetyNet
 
-(PowerUp, TwoMoreBall, Bazooka, StickyPaddle)
+(PowerUp, TwoMoreBall, Bazooka, StickyPaddle, SafetyNet)

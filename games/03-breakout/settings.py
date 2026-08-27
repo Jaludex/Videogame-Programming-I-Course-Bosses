@@ -22,6 +22,7 @@ from src.utilities.frames import (
     generate_ball_frames,
     generate_brick_frames,
     generate_powerups_frames,
+    generate_safety_net_frames,
 )
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
@@ -53,10 +54,13 @@ LIVE_POINTS_BASE = 2000
 PADDLE_GROW_UP_POINTS = 200
 
 POWERUP_SPEED = 50
-ROCKET_ACCELERATION = -100
+ROCKET_ACCELERATION = -200
 
 BAZOOKA_TIME = 8
-STICLY_PADDLE_TIME = 10
+STICLY_PADDLE_TIME = 12
+SAFETY_NET_TIME = 10
+
+SAFETY_NET_HEIGHT = VIRTUAL_HEIGHT - 16
 
 POWERUP_BAR_WIDTH = 60
 POWERUP_BAR_HEIGHT = 10
@@ -104,7 +108,8 @@ FRAMES = {
     "arrows": generate_frames(TEXTURES["arrows"], 24, 24),
     "powerups": generate_powerups_frames(),
     "bazooka": pygame.Rect(0, 208, 16, 32),
-    "rocket": pygame.Rect(16, 208, 10, 16)
+    "rocket": pygame.Rect(16, 208, 10, 16),
+    "safety_net": generate_safety_net_frames()
 }
 
 FONTS = {
@@ -116,3 +121,4 @@ FONTS = {
 
 COLOR_GREEN = (0, 255, 0)
 COLOR_BLUE = (0, 0, 255)
+COLOR_ORANGE = (255, 172, 0)
