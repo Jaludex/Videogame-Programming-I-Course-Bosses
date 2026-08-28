@@ -17,8 +17,7 @@ class Tile:
     def __init__(self, i: int, j: int, color: int, variety: int) -> None:
         self.i = i
         self.j = j
-        self.x = self.j * settings.TILE_SIZE
-        self.y = self.i * settings.TILE_SIZE
+        self.reset_board_coords()
         self.color = color
         self.variety = variety
         self.alpha_surface = pygame.Surface(
@@ -43,3 +42,9 @@ class Tile:
             (self.x + offset_x, self.y + offset_y),
             settings.FRAMES["tiles"][self.color][self.variety],
         )
+
+    def get_board_coords(self):
+        return (self.j * settings.TILE_SIZE, self.i * settings.TILE_SIZE)
+
+    def reset_board_coords(self):
+        self.x, self.y = self.get_board_coords()
