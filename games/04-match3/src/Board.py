@@ -11,7 +11,7 @@ This file contains the class Board.
 from typing import List, Optional, Tuple, Any, Dict, Set
 
 import pygame
-
+import copy
 import random
 
 import settings
@@ -208,3 +208,56 @@ class Board:
                     tweens.append((tile, {"y": tile.i * settings.TILE_SIZE}))
 
         return tweens
+
+    def swap_tiles(self, tile1: Tile, tile2: Tile) -> None:
+        (
+            self.tiles[tile1.i][tile1.j],
+            self.tiles[tile2.i][tile2.j],
+        ) = (
+            self.tiles[tile2.i][tile2.j],
+            self.tiles[tile1.i][tile1.j],
+        )
+        tile1.i, tile1.j, tile2.i, tile2.j = (
+            tile2.i,
+            tile2.j,
+            tile1.i,
+            tile1.j,
+        )
+
+    def search_match(self):
+        for i in range(0, settings.BOARD_HEIGHT):
+            for j in range(0, settings.BOARD_WIDTH):
+                tile1 = self.tiles[i][j]
+
+                if i < settings.BOARD_HEIGHT - 1:
+                    tile2 = self.tiles[i + 1][j]
+
+                    self.swap_tiles(tile1, tile2)
+
+                    has_match = self.calculate_matches_for([tile1, tile2]) is not None
+                    self.matches = []
+
+                    self.swap_tiles(tile1, tile2)
+
+                    if has_match:
+                        return (tile1, tile2)
+
+                if j < settings.BOARD_WIDTH - 1:
+                    tile2 = self.tiles[i][j + 1]
+
+                    self.swap_tiles(tile1, tile2)
+
+                    has_match = self.calculate_matches_for([tile1, tile2]) is not None
+                    self.matches = []
+
+                    self.swap_tiles(tile1, tile2)
+
+                    if has_match:
+                        return (tile1, tile2)
+
+        return None
+
+    def reset(self) -> None:
+        self.matches = []
+        self._initialize_tiles()
+        settings.SOUNDS["board_reset"].play()

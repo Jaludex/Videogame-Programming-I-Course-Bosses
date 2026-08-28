@@ -36,6 +36,11 @@ class PlayState(BaseState):
 
         self.active = True
 
+        self.hightlight_hint = False
+        self.hint_timer = None
+
+        self.check_board()
+
         self.timer = settings.LEVEL_TIME
 
         self.goal_score = self.level * 1.25 * 1000
@@ -92,6 +97,16 @@ class PlayState(BaseState):
             # y = self.highlighted_i1 * settings.TILE_SIZE + self.board.y
             # surface.blit(self.tile_alpha_surface, (x, y))
             self.board.tiles[self.highlighted_i1][self.highlighted_j1].render(surface, self.board.x, self.board.y)
+
+        if self.hightlight_hint and self.possible_next_match is not None:
+            hint_tile1, hint_tile2 = self.possible_next_match
+            hint_x1 = hint_tile1.j * settings.TILE_SIZE + self.board.x
+            hint_y1 = hint_tile1.i * settings.TILE_SIZE + self.board.y
+            hint_x2 = hint_tile2.j * settings.TILE_SIZE + self.board.x
+            hint_y2 = hint_tile2.i * settings.TILE_SIZE + self.board.y
+
+            surface.blit(self.tile_alpha_surface, (hint_x1, hint_y1))
+            surface.blit(self.tile_alpha_surface, (hint_x2, hint_y2))
 
         surface.blit(self.text_alpha_surface, (16, 16))
         render_text(
@@ -170,39 +185,14 @@ class PlayState(BaseState):
                             tile2 = self.board.tiles[self.highlighted_i2][
                                 self.highlighted_j2
                             ]
-                            (
-                                self.board.tiles[tile1.i][tile1.j],
-                                self.board.tiles[tile2.i][tile2.j],
-                            ) = (
-                                self.board.tiles[tile2.i][tile2.j],
-                                self.board.tiles[tile1.i][tile1.j],
-                            )
-                            tile1.i, tile1.j, tile2.i, tile2.j = (
-                                tile2.i,
-                                tile2.j,
-                                tile1.i,
-                                tile1.j,
-                            )
+                            self.board.swap_tiles(tile1, tile2)
                             valid_match: bool = self._calculate_matches([tile1, tile2])
 
                             if valid_match:
-                                self.active = True
-
+                                self.hightlight_hint = False
                             else:
                                 def set_back():
-                                    (
-                                        self.board.tiles[tile1.i][tile1.j],
-                                        self.board.tiles[tile2.i][tile2.j],
-                                    ) = (
-                                        self.board.tiles[tile2.i][tile2.j],
-                                        self.board.tiles[tile1.i][tile1.j],
-                                    )
-                                    tile1.i, tile1.j, tile2.i, tile2.j = (
-                                        tile2.i,
-                                        tile2.j,
-                                        tile1.i,
-                                        tile1.j,
-                                    )
+                                    self.board.swap_tiles(tile1, tile2)
 
                                     self.active = True
 
@@ -244,7 +234,7 @@ class PlayState(BaseState):
     def _calculate_matches(self, tiles: List) -> bool:
         matches = self.board.calculate_matches_for(tiles)
 
-        if matches is None:
+        if matches is None or len(matches) == 0:
             return False
 
         settings.SOUNDS["match"].stop()
@@ -257,12 +247,43 @@ class PlayState(BaseState):
 
         falling_tiles = self.board.get_falling_tiles()
 
-        Timer.tween(
-            0.25,
-            falling_tiles,
-            on_finish=lambda: self._calculate_matches(
-                [item[0] for item in falling_tiles]
-            ),
-        )
+        def on_falling_complete():
+            has_more_matches = self._calculate_matches([item[0] for item in falling_tiles])
+
+            if not has_more_matches:
+                self.check_board()
+                self.active = True
+
+        if falling_tiles:
+            Timer.tween(
+                0.25,
+                falling_tiles,
+                on_finish=on_falling_complete
+            )
+        else:
+            self.check_board()
+            self.active = True
 
         return True
+
+    def check_board(self) -> None:
+        if self.hint_timer is not None:
+            self.hint_timer.remove()
+
+        self.possible_next_match = self.board.search_match()
+
+        while self.possible_next_match is None:
+            self.board.reset()
+            self.possible_next_match = self.board.search_match()
+
+        def set_hightlight():
+            self.hightlight_hint = True
+        
+        self.hint_timer = Timer.after(
+            settings.BEFORE_HINT_TIME,
+            set_hightlight
+        )
+
+        return
+
+        
