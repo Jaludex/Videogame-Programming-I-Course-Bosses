@@ -41,7 +41,7 @@ TILE_SIZE = 32
 NUM_VARIETIES = 6
 NUM_COLORS = 18
 
-VALID_COLORS = (0, 5, 6, 10, 11, 13)
+VALID_COLORS = [0, 5, 6, 10, 11, 13]
 NUM_VALID_COLORS = len(VALID_COLORS)
 
 BACKGROUND_SCROLL_SPEED = 40
@@ -85,3 +85,7 @@ FONTS = {
     "large": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", 48),
     "huge": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", 64),
 }
+
+COLOR_BLUE = (99, 155, 255)
+COLOR_WARNING = (224, 171, 11)
+COLOR_RED = (255, 115, 99)

@@ -20,11 +20,14 @@ from src.tiles.MiniBombTile import MiniBombTile
 from src.tiles.BombTile import BombTile
 
 class Board:
-    def __init__(self, x: int, y: int) -> None:
+    def __init__(self, x: int, y: int, level: int = 1) -> None:
         self.x = x
         self.y = y
         self.matches: List[List[Tile]] = []
         self.tiles: List[List[Tile]] = []
+        self.level = level
+        self.valid_colors = []
+        self._set_valid_colors()
         self._initialize_tiles()
 
     def render(self, surface: pygame.Surface) -> None:
@@ -51,12 +54,12 @@ class Board:
             [None for _ in range(settings.BOARD_WIDTH)]
             for _ in range(settings.BOARD_HEIGHT)
         ]
+
         for i in range(settings.BOARD_HEIGHT):
             for j in range(settings.BOARD_WIDTH):
-                color = settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)]
+                color = self.valid_colors[random.randint(0, len(self.valid_colors) - 1)]
                 while self._is_match_generated(i, j, color):
-                    color = settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)]
-
+                    color = self.valid_colors[random.randint(0, len(self.valid_colors) - 1)]
                 self.tiles[i][j] = Tile(
                     i, j, color, 0
                 )
@@ -224,7 +227,7 @@ class Board:
                     tile = Tile(
                         i,
                         j,
-                        settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)],
+                        self.valid_colors[random.randint(0, len(self.valid_colors) - 1)],
                         0,
                     )
                     tile.y -= settings.TILE_SIZE
@@ -285,3 +288,28 @@ class Board:
         self.matches = []
         self._initialize_tiles()
         settings.SOUNDS["board_reset"].play()
+
+    def _set_valid_colors(self) -> None:
+        if self.level == settings.NUM_COLORS:
+            self.valid_colors = list(range(0, settings.NUM_COLORS - 1))
+            return
+
+        self.valid_colors = settings.VALID_COLORS.copy()
+
+        colors_to_add = self.level - 1
+        
+        available_pool = [
+            c for c in range(settings.NUM_COLORS) 
+            if c not in self.valid_colors
+        ]
+
+        if available_pool and colors_to_add > 0:
+            new_colors = random.sample(
+                available_pool, 
+                k=min(colors_to_add, len(available_pool))
+            )
+            self.valid_colors.extend(new_colors)
+
+        print(f"Constructed with {len(self.valid_colors)} available colors")
+
+

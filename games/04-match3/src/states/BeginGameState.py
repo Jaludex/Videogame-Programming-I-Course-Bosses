@@ -23,9 +23,9 @@ from src.Board import Board
 class BeginGameState(BaseState):
     def enter(self, **enter_params: Dict[str, Any]) -> None:
         self.transition_alpha = 255
-        self.board = Board(settings.VIRTUAL_WIDTH - 272, 16)
-        self.level_label_y = -64
         self.level = enter_params.get("level", 1)
+        self.board = Board(settings.VIRTUAL_WIDTH - 272, 16, self.level)
+        self.level_label_y = -64
         self.score = enter_params.get("score", 0)
 
         # A surface that supports alpha for the screen

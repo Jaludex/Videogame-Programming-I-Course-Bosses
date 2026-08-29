@@ -39,11 +39,13 @@ class PlayState(BaseState):
         self.hightlight_hint = False
         self.hint_timer = None
 
+        self.timer_color = settings.COLOR_BLUE
+
         self.check_board()
 
         self.timer = settings.LEVEL_TIME
 
-        self.goal_score = self.level * 3 * 1000
+        self.goal_score = self.level * 2 * 1000
 
         # A surface that supports alpha to highlight a selected tile
         self.tile_alpha_surface = pygame.Surface(
@@ -66,7 +68,7 @@ class PlayState(BaseState):
             self.timer -= 1
 
             # Play warning sound on timer if we get low
-            if self.timer <= 5:
+            if self.timer <= 10:
                 settings.SOUNDS["clock"].play()
 
         Timer.every(1, decrement_timer)
@@ -88,6 +90,11 @@ class PlayState(BaseState):
             mouse_pos_y = mouse_pos_y * settings.VIRTUAL_HEIGHT // settings.WINDOW_HEIGHT
             self.board.tiles[self.highlighted_i1][self.highlighted_j1].x = mouse_pos_x - self.board.x - (settings.TILE_SIZE // 2)
             self.board.tiles[self.highlighted_i1][self.highlighted_j1].y = mouse_pos_y - self.board.y - (settings.TILE_SIZE // 2)
+
+        if self.timer < 10:
+            self.timer_color = settings.COLOR_RED
+        elif self.timer < 30:
+            self.timer_color = settings.COLOR_WARNING
 
     def render(self, surface: pygame.Surface) -> None:
         self.board.render(surface)
@@ -142,7 +149,7 @@ class PlayState(BaseState):
             settings.FONTS["medium"],
             30,
             108,
-            (99, 155, 255),
+            self.timer_color,
             shadowed=True,
         )
 
