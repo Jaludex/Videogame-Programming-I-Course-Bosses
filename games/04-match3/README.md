@@ -9,6 +9,7 @@ Things added:
  - MiniBomb tiles, generated from a match with exactly four tiles. When played it also plays the tiles on it sides
  - Bomb tiles, generated from a match with more than four tiles. When played it also plays all the tiles with the same color on the board
 	- Matches that plays any bomb won't generate more bombs
+ - Color changing round timer for knowing when you're gonna lose
 
 Minor Changes from base game
 

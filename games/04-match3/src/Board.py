@@ -310,6 +310,4 @@ class Board:
             )
             self.valid_colors.extend(new_colors)
 
-        print(f"Constructed with {len(self.valid_colors)} available colors")
-
 
