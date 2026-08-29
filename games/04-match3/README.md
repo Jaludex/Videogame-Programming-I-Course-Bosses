@@ -15,4 +15,4 @@ Minor Changes from base game
  - Reduce the amount of colors for tiles, 18 are too much for the "Only allow moves that start a match" rule, because almost every move will restart the board and spawning bombs is really hard. Reduced to 6 but can be changed in settings.py.
  - Gave a new purpose to the varieties of tiles, instead of being random, they're used for indetifying the bombs, the unused ones can be used for future kinds of tiles
 
-[Base game](https://github.com/R3mmurd/VideoGameProgrammingI/tree/main/03-breakout)
+[Base game](https://github.com/R3mmurd/VideoGameProgrammingI/tree/main/04-match3)
