@@ -9,7 +9,7 @@ This file contains the class Tile.
 """
 
 import pygame
-
+from typing import List
 import settings
 
 
@@ -49,5 +49,5 @@ class Tile:
     def reset_board_coords(self):
         self.x, self.y = self.get_board_coords()
 
-    def play(self):
+    def play(self, tiles, match):
         pass

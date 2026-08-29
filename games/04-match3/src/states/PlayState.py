@@ -43,7 +43,7 @@ class PlayState(BaseState):
 
         self.timer = settings.LEVEL_TIME
 
-        self.goal_score = self.level * 1.25 * 1000
+        self.goal_score = self.level * 3 * 1000
 
         # A surface that supports alpha to highlight a selected tile
         self.tile_alpha_surface = pygame.Surface(
@@ -191,6 +191,8 @@ class PlayState(BaseState):
                             if valid_match:
                                 self.hightlight_hint = False
                             else:
+                                settings.SOUNDS["wrong_move"].stop()
+                                settings.SOUNDS["wrong_move"].play()
                                 def set_back():
                                     self.board.swap_tiles(tile1, tile2)
 
@@ -236,6 +238,10 @@ class PlayState(BaseState):
 
         if matches is None or len(matches) == 0:
             return False
+
+        for match in matches:
+            for tile in match:
+                tile.play(self.board.tiles, match)
 
         settings.SOUNDS["match"].stop()
         settings.SOUNDS["match"].play()

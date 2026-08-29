@@ -15,8 +15,9 @@ import copy
 import random
 
 import settings
-from src.Tile import Tile
-
+from src.tiles.Tile import Tile
+from src.tiles.MiniBombTile import MiniBombTile
+from src.tiles.BombTile import BombTile
 
 class Board:
     def __init__(self, x: int, y: int) -> None:
@@ -52,12 +53,12 @@ class Board:
         ]
         for i in range(settings.BOARD_HEIGHT):
             for j in range(settings.BOARD_WIDTH):
-                color = random.randint(0, settings.NUM_COLORS - 1)
+                color = settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)]
                 while self._is_match_generated(i, j, color):
-                    color = random.randint(0, settings.NUM_COLORS - 1)
+                    color = settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)]
 
                 self.tiles[i][j] = Tile(
-                    i, j, color, random.randint(0, settings.NUM_VARIETIES - 1)
+                    i, j, color, 0
                 )
 
     def _calculate_match_rec(self, tile: Tile) -> Set[Tile]:
@@ -151,8 +152,31 @@ class Board:
 
     def remove_matches(self) -> None:
         for match in self.matches:
+            match_len = len(match)
+
+            can_spawn_bombs = True
+
             for tile in match:
-                self.tiles[tile.i][tile.j] = None
+                if tile.variety != 0:
+                    can_spawn_bombs = False
+                    break
+            
+            if can_spawn_bombs and match_len >= 4:
+                obj_tile = match[-1]
+                
+                if match_len == 4:
+                    new_tile = MiniBombTile(obj_tile.i, obj_tile.j, obj_tile.color)
+                else:
+                    new_tile = BombTile(obj_tile.i, obj_tile.j, obj_tile.color)
+
+                for tile in match:
+                    self.tiles[tile.i][tile.j] = None
+
+                self.tiles[obj_tile.i][obj_tile.j] = new_tile
+
+            else:
+                for tile in match:
+                    self.tiles[tile.i][tile.j] = None
 
         self.matches = []
 
@@ -200,8 +224,8 @@ class Board:
                     tile = Tile(
                         i,
                         j,
-                        random.randint(0, settings.NUM_COLORS - 1),
-                        random.randint(0, settings.NUM_VARIETIES - 1),
+                        settings.VALID_COLORS[random.randint(0, settings.NUM_VALID_COLORS - 1)],
+                        0,
                     )
                     tile.y -= settings.TILE_SIZE
                     self.tiles[i][j] = tile

@@ -41,6 +41,9 @@ TILE_SIZE = 32
 NUM_VARIETIES = 6
 NUM_COLORS = 18
 
+VALID_COLORS = (0, 5, 6, 10, 11, 13)
+NUM_VALID_COLORS = len(VALID_COLORS)
+
 BACKGROUND_SCROLL_SPEED = 40
 BACKGROUND_LOOPING_POINT = -1024 + VIRTUAL_WIDTH - 4 + 51
 
@@ -67,9 +70,14 @@ SOUNDS = {
     "next-level": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "next-level.wav"),
     "select": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "select.wav"),
     "board_reset": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "board_reset.wav"),
+    "wrong_move": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "wrong_move.wav"),
+    "bomb_generated": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "bomb_generated.wav"),
+    "play_bomb": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "play_bomb.wav"),
+    "play_minibomb": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "play_minibomb.wav"),
 }
 
 pygame.mixer.music.load(BASE_DIR / "assets" / "sounds" / "music.mp3")
+pygame.mixer.music.set_volume(0.5)
 
 FONTS = {
     "small": pygame.font.Font(BASE_DIR / "assets" / "fonts" / "font.ttf", 12),
