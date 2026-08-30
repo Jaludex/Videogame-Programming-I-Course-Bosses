@@ -290,11 +290,10 @@ class Board:
         settings.SOUNDS["board_reset"].play()
 
     def _set_valid_colors(self) -> None:
-        if self.level == settings.NUM_COLORS:
-            self.valid_colors = list(range(0, settings.NUM_COLORS - 1))
-            return
-
         self.valid_colors = settings.VALID_COLORS.copy()
+
+        if len(self.valid_colors) == settings.NUM_COLORS:
+            return
 
         colors_to_add = self.level - 1
         
