@@ -1,0 +1,116 @@
+{
+    "activeFile": "graphics/tileset.tsx",
+    "expandedProjectPaths": [
+        "tilemap",
+        ".",
+        "graphics"
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "/home/Jaludex/UNI/PRV1/Videogame-Programming-I-Course-Bosses/games/05-super_martian/assets/tilemaps/level1.json": {
+            "expandedGroupLayers": [
+                1
+            ],
+            "scale": 1.2931875,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 400.1739886907351,
+                "y": 96.27374220675657
+            }
+        },
+        "/home/Jaludex/UNI/PRV1/Videogame-Programming-I-Course-Bosses/games/05-super_martian/assets/tilemaps/level1.json#": {
+            "scaleInDock": 2
+        },
+        "graphics/creatures.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "graphics/level2.tmx": {
+            "scale": 1.0776562499999998,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.20878642888226,
+                "y": 160.06959547629407
+            }
+        },
+        "graphics/tileset.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 4
+        },
+        "tilemap/creatures.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "tilemap/level1.json": {
+            "expandedGroupLayers": [
+                1
+            ],
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 322.33333333333337,
+                "y": 143.66666666666669
+            }
+        },
+        "tilemap/level1.json#": {
+            "scaleInDock": 1
+        },
+        "tilemap/level2.tmj": {
+            "scale": 0.5388281249999999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 557.6917500362478,
+                "y": 93.72190807597508
+            }
+        },
+        "tilemap/level2.tmx": {
+            "expandedGroupLayers": [
+                7
+            ],
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 350.33333333333337,
+                "y": 153
+            }
+        },
+        "tilemap/level2.tmx#tileset": {
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/home/Jaludex/UNI/PRV1/Videogame-Programming-I-Course-Bosses/tiled/MartianLevel2/tilemap",
+    "last.imagePath": "/home/Jaludex/UNI/PRV1/Videogame-Programming-I-Course-Bosses/tiled/MartianLevel2/graphics",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 60,
+    "openFiles": [
+        "tilemap/level2.tmx",
+        "graphics/tileset.tsx",
+        "graphics/creatures.tsx"
+    ],
+    "project": "level2.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "graphics/tileset.tsx",
+        "tilemap/level2.tmx",
+        "graphics/creatures.tsx",
+        "tilemap/level1.json",
+        "tilemap/level2.tmj",
+        "/home/Jaludex/UNI/PRV1/Videogame-Programming-I-Course-Bosses/games/05-super_martian/assets/tilemaps/level1.json",
+        "tilemap/creatures.tsx",
+        "graphics/level2.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
