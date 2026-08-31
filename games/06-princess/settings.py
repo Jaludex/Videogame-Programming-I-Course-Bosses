@@ -16,6 +16,7 @@ import pygame
 
 from gale import frames
 from gale import input_handler
+from gale import tilemap
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_LEFT, "move_left")
@@ -89,6 +90,10 @@ TEXTURES = {
         BASE_DIR / "assets" / "graphics" / "character_pot_walk.png"
     ),
 }
+
+# Used by Room's gale.tilemap.TileMap: TILE_* ids above are 1-based,
+# matching this tileset's default first_gid, so they double as gids.
+TILESET = tilemap.Tileset(TEXTURES["tiles"], TILE_SIZE, TILE_SIZE)
 
 FRAMES = {
     "tiles": frames.generate_frames(TEXTURES["tiles"], 16, 16),

@@ -39,6 +39,7 @@ class GameEntity(mixins.DrawableMixin, mixins.AnimatedMixin, mixins.CollidableMi
         self.vy: float = 0
         self.move_direction: int = 0
         self.jump_requested: bool = False
+        self.jump_held: bool = False
         self.texture_id = texture_id
         self.frame_index = -1
         self.game_level = game_level

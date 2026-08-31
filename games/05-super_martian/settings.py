@@ -42,6 +42,14 @@ PLAYER_SPEED = 80
 
 GRAVITY = 980
 
+# Variable-height jump: the takeoff speed is always the same (full arc if
+# held), but releasing "jump" early while still ascending clamps vy up to
+# JUMP_CUT_VELOCITY (a smaller upward speed), so the arc peaks sooner and
+# lower. The longer the button stays held, the closer the jump gets to
+# its full height.
+JUMP_TAKEOFF_SPEED = GRAVITY / 3
+JUMP_CUT_VELOCITY = GRAVITY / 8
+
 CAMERA_FOLLOW_RATE = 8.0
 
 # Random delay range (seconds) between one flying creature leaving the

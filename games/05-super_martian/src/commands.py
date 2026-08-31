@@ -45,6 +45,12 @@ class StopMoveRightCommand(Command):
 class JumpCommand(Command):
     def execute(self, receiver, dt: float = 0.0) -> None:
         receiver.jump_requested = True
+        receiver.jump_held = True
+
+
+class StopJumpCommand(Command):
+    def execute(self, receiver, dt: float = 0.0) -> None:
+        receiver.jump_held = False
 
 
 MOVE_LEFT = MoveLeftCommand()
@@ -52,3 +58,4 @@ MOVE_RIGHT = MoveRightCommand()
 STOP_MOVE_LEFT = StopMoveLeftCommand()
 STOP_MOVE_RIGHT = StopMoveRightCommand()
 JUMP = JumpCommand()
+STOP_JUMP = StopJumpCommand()

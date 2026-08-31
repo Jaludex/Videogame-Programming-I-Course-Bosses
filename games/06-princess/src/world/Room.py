@@ -13,6 +13,8 @@ from typing import Any, Callable, List, Optional, TypeVar
 
 import pygame
 
+from gale.tilemap import TileMap
+
 import settings
 from src.definitions.entity import ENTITY_DEFS
 from src.definitions.game_objects import GAME_OBJECT_DEFS
@@ -90,7 +92,8 @@ class Room:
         self.width = settings.MAP_WIDTH
         self.height = settings.MAP_HEIGHT
 
-        self.tiles: List[List[int]] = []
+        self.tilemap = TileMap(settings.TILE_SIZE, settings.TILE_SIZE, self.width, self.height)
+        self.tilemap.add_tileset(settings.TILESET)
         self._generate_walls_and_floors()
 
         self.entities: List[Entity] = []
@@ -254,9 +257,9 @@ class Room:
         Generates the walls and floors of the room, randomizing the various
         varieties of said tiles for visual variety.
         """
-        for y in range(1, self.height + 1):
-            row = []
+        floor = self.tilemap.add_layer("floor")
 
+        for y in range(1, self.height + 1):
             for x in range(1, self.width + 1):
                 if x == 1 and y == 1:
                     tile_id = settings.TILE_TOP_LEFT_CORNER
@@ -277,9 +280,7 @@ class Room:
                 else:
                     tile_id = random.choice(settings.TILE_FLOORS)
 
-                row.append(tile_id)
-
-            self.tiles.append(row)
+                floor[y - 1][x - 1] = tile_id
 
     def _generate_entities(self) -> None:
         """Randomly creates an assortment of enemies for the player to fight."""
@@ -359,16 +360,24 @@ class Room:
         offset_x = self.adjacent_offset_x + camera_offset_x
         offset_y = self.adjacent_offset_y + camera_offset_y
 
+        # Not tilemap.render(surface): offset_x/offset_y can carry the room
+        # a full VIRTUAL_WIDTH/HEIGHT off-screen mid room-shift, and
+        # Surface.subsurface() (used for 07-ultimate_fantasy's BattleState,
+        # whose offset is fixed and always in-bounds) requires the rect to
+        # land fully inside surface -- a plain blit per tile, sourcing the
+        # gid/rect from the TileMap/Tileset instead of the old self.tiles
+        # list and settings.frame("tiles", ...), has no such restriction.
         for y in range(self.height):
             for x in range(self.width):
-                tile_id = self.tiles[y][x]
+                gid = self.tilemap.get_gid("floor", y, x)
+                tileset = self.tilemap.tileset_for_gid(gid)
                 surface.blit(
-                    settings.TEXTURES["tiles"],
+                    tileset.image,
                     (
                         x * settings.TILE_SIZE + self.render_offset_x + offset_x,
                         y * settings.TILE_SIZE + self.render_offset_y + offset_y,
                     ),
-                    settings.frame("tiles", tile_id),
+                    tileset.rect_for(gid),
                 )
 
         for doorway in self.doorways:

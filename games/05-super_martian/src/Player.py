@@ -14,7 +14,14 @@ from gale.command import CommandBindings
 from gale.input_handler import InputData
 
 from src.GameEntity import GameEntity
-from src.commands import JUMP, MOVE_LEFT, MOVE_RIGHT, STOP_MOVE_LEFT, STOP_MOVE_RIGHT
+from src.commands import (
+    JUMP,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    STOP_JUMP,
+    STOP_MOVE_LEFT,
+    STOP_MOVE_RIGHT,
+)
 from src.states.entities import player_states
 
 
@@ -48,7 +55,7 @@ class Player(GameEntity):
         self.command_bindings.bind(
             "move_right", press=MOVE_RIGHT, release=STOP_MOVE_RIGHT
         )
-        self.command_bindings.bind("jump", press=JUMP)
+        self.command_bindings.bind("jump", press=JUMP, release=STOP_JUMP)
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         self.command_bindings.dispatch(self, input_id, input_data)
