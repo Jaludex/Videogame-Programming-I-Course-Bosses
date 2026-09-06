@@ -29,6 +29,9 @@ class GameLevel:
         self.tilemap = load_tiled_map(settings.TILEMAPS[num_level])
         self.creatures = []
         self.items = []
+        self.key_block = None
+        self.goal_score = 200 + ((num_level - 1) * 200)
+        self.goal_reached = False
 
         for obj in self.tilemap.object_layers.get("creatures", []):
             self.add_creature(
@@ -45,6 +48,30 @@ class GameLevel:
             self.add_item(
                 {
                     "item_name": "coins",
+                    "frame_index": obj.properties["frame_index"],
+                    "x": obj.x,
+                    "y": obj.y,
+                    "width": obj.width,
+                    "height": obj.height,
+                }
+            )
+
+        for obj in self.tilemap.object_layers.get("keyBlocks", []):
+            self.add_item(
+                {
+                    "item_name": "blocks",
+                    "frame_index": obj.properties["frame_index"],
+                    "x": obj.x,
+                    "y": obj.y,
+                    "width": obj.width,
+                    "height": obj.height,
+                }
+            )
+
+        for obj in self.tilemap.object_layers.get("keys", []):
+            self.add_item(
+                {
+                    "item_name": "keys",
                     "frame_index": obj.properties["frame_index"],
                     "x": obj.x,
                     "y": obj.y,
@@ -79,7 +106,7 @@ class GameLevel:
             settings.FLYING_CREATURE_MIN_SPAWN_DELAY,
             settings.FLYING_CREATURE_MAX_SPAWN_DELAY,
         )
-        Timer.after(delay, self._spawn_flying_creature)
+        self.flyers_spawn_timer = Timer.after(delay, self._spawn_flying_creature)
 
     def _pick_open_row(self, col: int) -> Optional[int]:
         """
@@ -141,3 +168,54 @@ class GameLevel:
         for item in self.items:
             if item.active:
                 item.render(surface, camera)
+
+    def finish_level(self):
+        self.creatures = []
+        self.flyers_spawn_timer.remove()
+
+        off_bricks = []
+
+        for item in self.items:
+            if item.frame_index == 34:
+                off_bricks.append(item)
+
+        self.items = []
+
+        for obj in off_bricks:
+            self.add_item({
+                "item_name": "blocks",
+                "frame_index": 68,
+                "x": obj.x,
+                "y": obj.y,
+                "width": obj.width,
+                "height": obj.height,
+            })
+        self.goal_reached = True
+
+    def spawn_key(self, x: int, y: int):
+        self.add_item({
+            "item_name": "keys",
+            "frame_index": 69,
+            "x": x,
+            "y": y,
+            "width": 16,
+            "height":16
+        })
+
+        key = self.items[-1]
+
+        final_y = y - key.height
+        cenit_y = y - key.height * 2.5
+        def key_falling():
+            Timer.tween(
+                0.60,
+                [(key, {"y": final_y})],
+                ease_function_name="in_quad"
+            )
+
+        Timer.tween(
+            0.60,
+            [(key, {"y": cenit_y})],
+            ease_function_name="out_quad",
+            on_finish=key_falling
+        )

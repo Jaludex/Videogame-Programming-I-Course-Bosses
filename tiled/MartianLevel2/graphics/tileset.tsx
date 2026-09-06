@@ -4,17 +4,17 @@
  <image source="tileset.png" width="112" height="176"/>
  <tile id="0">
   <properties>
-   <property name="collision" value="solid"/>
+   <property name="collision" value="platform"/>
   </properties>
  </tile>
  <tile id="1">
   <properties>
-   <property name="collision" value="solid"/>
+   <property name="collision" value="platform"/>
   </properties>
  </tile>
  <tile id="2">
   <properties>
-   <property name="collision" value="solid"/>
+   <property name="collision" value="platform"/>
   </properties>
  </tile>
  <tile id="3">
@@ -37,37 +37,7 @@
    <property name="collision" value="solid"/>
   </properties>
  </tile>
- <tile id="7">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
- <tile id="8">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
- <tile id="9">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
  <tile id="13">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
- <tile id="14">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
- <tile id="15">
-  <properties>
-   <property name="collision" value="solid"/>
-  </properties>
- </tile>
- <tile id="16">
   <properties>
    <property name="collision" value="solid"/>
   </properties>

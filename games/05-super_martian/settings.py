@@ -40,6 +40,8 @@ WINDOW_HEIGHT = VIRTUAL_HEIGHT * 4
 
 PLAYER_SPEED = 80
 
+LEVEL_TIME = 90
+
 GRAVITY = 980
 
 # Variable-height jump: the takeoff speed is always the same (full arc if
@@ -85,6 +87,13 @@ SOUNDS = {
     "jump": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "jump.wav"),
     "timer": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "timer.wav"),
     "count": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "count.wav"),
+    "victory": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "victory.wav"),
+    "level_score_reached": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "level_score_reached.wav"),
+}
+
+MUSICS_DIR = {
+    "play": BASE_DIR / "assets" / "sounds" / "music_grassland.ogg",
+    "key_chance": BASE_DIR / "assets" / "sounds" / "key_chance.ogg"
 }
 
 SOUNDS["pickup_coin"].set_volume(0.5)

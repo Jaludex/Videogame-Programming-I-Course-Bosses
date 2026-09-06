@@ -26,12 +26,12 @@ from src.Player import Player
 
 class PlayState(BaseState):
     def enter(self, **enter_params: Dict[str, Any]) -> None:
-        self.level = enter_params.get("level", 2)
+        self.level = enter_params.get("level", 1)
         self.game_level = enter_params.get("game_level")
         if self.game_level is None:
             self.game_level = GameLevel(self.level)
             pygame.mixer.music.load(
-                settings.BASE_DIR / "assets" / "sounds" / "music_grassland.ogg"
+                settings.MUSICS_DIR["play"]
             )
             pygame.mixer.music.play(loops=-1)
 
@@ -58,8 +58,10 @@ class PlayState(BaseState):
 
         self.clock = enter_params.get("clock")
 
+        self.timer = enter_params.get("timer")
+
         if self.clock is None:
-            self.clock = Clock(30)
+            self.clock = Clock(settings.LEVEL_TIME)
 
             def countdown_timer():
                 self.clock.count_down()
@@ -70,7 +72,7 @@ class PlayState(BaseState):
                 if self.clock.time == 0:
                     self.player.change_state("dead")
 
-            Timer.every(1, countdown_timer)
+            self.timer = Timer.every(1, countdown_timer)
         else:
             Timer.resume()
 
@@ -79,19 +81,35 @@ class PlayState(BaseState):
             pygame.mixer.music.stop()
             pygame.mixer.music.unload()
             Timer.clear()
-            self.state_machine.change("game_over", self.player)
+            self.state_machine.change("game_over", self.player, self.level)
+
+        if self.player.grabbed_key:
+            self.state_machine.change(
+                "victory",
+                level=self.level,
+                player=self.player,
+                game_level=self.game_level,
+                clock=self.clock,
+                camera=self.camera,
+            )
 
         self.player.update(dt)
 
+        if self.player.spawn_key_at is not None:
+            x, y = self.player.spawn_key_at
+            self.game_level.spawn_key(x, y)
+            self.player.spawn_key_at = None
+
         if self.player.y >= self.tilemap.pixel_height:
-            self.player.change_state("dead")
+            self.player.change_state("dead",)
 
         self.camera.update(dt)
         self.game_level.update(dt)
 
-        for creature in self.game_level.creatures:
-            if self.player.collides(creature):
-                self.player.change_state("dead")
+        if not self.game_level.goal_reached:
+            for creature in self.game_level.creatures:
+                if self.player.collides(creature):
+                    self.player.change_state("dead")
 
         for item in self.game_level.items:
             if not item.active or not item.collidable:
@@ -100,6 +118,9 @@ class PlayState(BaseState):
             if self.player.collides(item):
                 item.on_collide(self.player)
                 item.on_consume(self.player)
+
+        if (not self.game_level.goal_reached) and self.player.score >= self.game_level.goal_score:
+            self._finish_level()
 
     def render(self, surface: pygame.Surface) -> None:
         self.game_level.render(surface, self.camera)
@@ -135,6 +156,24 @@ class PlayState(BaseState):
                 game_level=self.game_level,
                 player=self.player,
                 clock=self.clock,
+                timer=self.timer
             )
         else:
             self.player.on_input(input_id, input_data)
+
+    def _finish_level(self):
+        pygame.mixer.music.stop()
+        settings.SOUNDS["level_score_reached"].play()
+
+        def start_end_song():
+            pygame.mixer.music.load(settings.MUSICS_DIR["key_chance"])
+            pygame.mixer.music.play(loops=-1)
+
+        Timer.after(
+            settings.SOUNDS["level_score_reached"].get_length(),
+            start_end_song
+        )
+    
+        self.timer.remove()
+        self.game_level.finish_level()
+

@@ -56,6 +56,8 @@ class Player(GameEntity):
             "move_right", press=MOVE_RIGHT, release=STOP_MOVE_RIGHT
         )
         self.command_bindings.bind("jump", press=JUMP, release=STOP_JUMP)
+        self.grabbed_key = False
+        self.spawn_key_at = None
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         self.command_bindings.dispatch(self, input_id, input_data)
