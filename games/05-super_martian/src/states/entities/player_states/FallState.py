@@ -28,6 +28,7 @@ class FallState(BaseEntityState):
             self.entity.jump_requested = False
             self.coyote_timer.remove()
             self.entity.change_state("jump")
+            return
         else:
             self.entity.jump_requested = False
 
