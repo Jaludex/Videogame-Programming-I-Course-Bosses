@@ -32,4 +32,4 @@ class JumpState(BaseEntityState):
         self.entity.vx = settings.PLAYER_SPEED * self.entity.move_direction
 
         if self.entity.vy >= 0:
-            self.entity.change_state("fall")
+            self.entity.change_state("fall", False)

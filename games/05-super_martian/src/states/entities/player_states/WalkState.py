@@ -25,7 +25,7 @@ class WalkState(BaseEntityState):
             return
 
         if not self.entity.on_ground:
-            self.entity.change_state("fall")
+            self.entity.change_state("fall", True)
             return
 
         if self.entity.move_direction == 0:
