@@ -33,3 +33,6 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Tiled
+*.tiled-session
