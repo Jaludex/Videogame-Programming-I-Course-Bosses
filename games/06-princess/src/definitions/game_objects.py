@@ -17,7 +17,6 @@ def _pickup_heart(player, obj) -> None:
     player.heal(2)
     settings.SOUNDS["heart-taken"].play()
 
-
 GAME_OBJECT_DEFS: Dict[str, Dict[str, Any]] = {
     "switch": {
         "type": "switch",
@@ -60,5 +59,49 @@ GAME_OBJECT_DEFS: Dict[str, Dict[str, Any]] = {
             "default": {"frame": 5},
         },
         "on_consume": _pickup_heart,
+    },
+    "chest": {
+        "type": "chest",
+        "texture": "chest",
+        "frame": 1,
+        "width": 16,
+        "height": 19,
+        "solid": True,
+        "default_state": "closed",
+        "states": {
+            "closed": {"frame": 1},
+            "open": {"frame": 2},
+        }
+    },
+    "arrow": {
+        "type": "arrow",
+        "texture": "arrows",
+        "frame": 1,
+        "width": 16,
+        "height": 5,
+        "solid": True,
+        "default_state": "right",
+        "states": {
+            "right": {
+                "frame": 1,
+                "witdh": 16,
+                "height": 5,
+                },
+            "up": {
+                "frame": 2,
+                "witdh": 5,
+                "height": 16,
+                },
+            "left": {
+                "frame": 3,
+                "witdh": 16,
+                "height": 5,
+                },
+            "down": {
+                "frame": 4,
+                "witdh": 5,
+                "height": 16,
+                },
+        }
     },
 }

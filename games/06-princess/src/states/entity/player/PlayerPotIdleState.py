@@ -34,6 +34,7 @@ class PlayerPotIdleState(BaseEntityState):
 
     def update(self, dt: float) -> None:
         self.entity.sword_requested = False
+        self.entity.fire_requested = False
 
         if self.entity.interact_requested:
             self.entity.interact_requested = False

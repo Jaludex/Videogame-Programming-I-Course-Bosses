@@ -14,6 +14,8 @@ import pathlib
 
 import pygame
 
+from src import frames as frames_utility
+
 from gale import frames
 from gale import input_handler
 from gale import tilemap
@@ -26,6 +28,7 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_DOWN, "move_dow
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "sword")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "enter")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_KP_ENTER, "enter")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_x, "fire")
 
 TITLE = "The Legend of the Princess"
 
@@ -80,6 +83,9 @@ TEXTURES = {
     "character-swing-sword": pygame.image.load(
         BASE_DIR / "assets" / "graphics" / "character_swing_sword.png"
     ),
+    "character-shot-bow": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "character_shot_bow.png"
+    ),
     "hearts": pygame.image.load(BASE_DIR / "assets" / "graphics" / "hearts.png"),
     "switches": pygame.image.load(BASE_DIR / "assets" / "graphics" / "switches.png"),
     "entities": pygame.image.load(BASE_DIR / "assets" / "graphics" / "entities.png"),
@@ -88,6 +94,12 @@ TEXTURES = {
     ),
     "character-pot-walk": pygame.image.load(
         BASE_DIR / "assets" / "graphics" / "character_pot_walk.png"
+    ),
+    "chest": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "chest.png"
+    ),
+    "arrows": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "arrows.png"
     ),
 }
 
@@ -101,11 +113,16 @@ FRAMES = {
     "character-swing-sword": frames.generate_frames(
         TEXTURES["character-swing-sword"], 32, 32
     ),
+    "character-shot-bow": frames.generate_frames(
+        TEXTURES["character-shot-bow"], 32, 32
+    ),
     "hearts": frames.generate_frames(TEXTURES["hearts"], 16, 16),
     "switches": frames.generate_frames(TEXTURES["switches"], 16, 18),
     "entities": frames.generate_frames(TEXTURES["entities"], 16, 16),
     "character-pot-lift": frames.generate_frames(TEXTURES["character-pot-lift"], 16, 32),
     "character-pot-walk": frames.generate_frames(TEXTURES["character-pot-walk"], 16, 32),
+    "chest": frames.generate_frames(TEXTURES["chest"], 16, 19),
+    "arrows": frames_utility.generate_arrow_frames()
 }
 
 

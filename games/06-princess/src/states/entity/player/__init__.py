@@ -14,6 +14,7 @@ from src.states.entity.player.PlayerPotLiftState import PlayerPotLiftState
 from src.states.entity.player.PlayerPotWalkState import PlayerPotWalkState
 from src.states.entity.player.PlayerSwingSwordState import PlayerSwingSwordState
 from src.states.entity.player.PlayerWalkState import PlayerWalkState
+from src.states.entity.player.PlayerShotBowState import PlayerShotBowState
 
 (
     PlayerIdleState,
@@ -22,4 +23,5 @@ from src.states.entity.player.PlayerWalkState import PlayerWalkState
     PlayerPotWalkState,
     PlayerSwingSwordState,
     PlayerWalkState,
+    PlayerShotBowState
 )

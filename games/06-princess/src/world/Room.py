@@ -23,6 +23,7 @@ from src.GameObject import GameObject
 from src.states.entity.EntityIdleState import EntityIdleState
 from src.states.entity.EntityWalkState import EntityWalkState
 from src.world.Doorway import Doorway
+from src.Bow import Bow
 
 _ENEMY_TYPES = ["skeleton", "slime", "bat", "ghost", "spider"]
 
@@ -252,6 +253,26 @@ class Room:
                 player.change_state("pot-lift", pot=obj)
                 return
 
+    def open_above_chest(self, player: TypeVar("Player")) -> None:
+        player_y = player.y + player.height / 2
+        player_height = player.height - player.height / 2
+        player_col = int((player.x + player.width / 2) // settings.TILE_SIZE)
+        player_row = int((player_y + player_height / 2) // settings.TILE_SIZE)
+
+        for obj in self.objects:
+            if obj.type != "chest":
+                continue
+
+            obj_col = int((obj.x + obj.width / 2) // settings.TILE_SIZE)
+            obj_row = int((obj.y + obj.height / 2) // settings.TILE_SIZE)
+
+            if player.direction == "up" and obj_col == player_col and obj_row == player_row - 1:
+                obj.state = "open"
+
+                #CINEMATICA CHULA Y LUEGO
+
+                player.bow = Bow()
+
     def _generate_walls_and_floors(self) -> None:
         """
         Generates the walls and floors of the room, randomizing the various
@@ -333,6 +354,13 @@ class Room:
         )
         self.objects.append(switch)
 
+        chest = None
+        if self.player.bow is None and random.randint(1, 2) == 1:
+                    chest_x = random.randint(2, self.width - 2)
+                    chest_y = random.randint(2, self.height - 2)
+                    chest = GameObject(GAME_OBJECT_DEFS["chest"], chest_x * 16, chest_y * 16)
+                    self.objects.append(chest)
+
         def open_all_doors() -> None:
             if switch.state == "unpressed":
                 switch.state = "pressed"
@@ -347,9 +375,11 @@ class Room:
         for y in range(2, self.height):
             for x in range(2, self.width):
                 if random.randint(1, 20) == 1:
-                    self.objects.append(
-                        GameObject(GAME_OBJECT_DEFS["pot"], x * 16, y * 16)
-                    )
+                    pot = GameObject(GAME_OBJECT_DEFS["pot"], x * 16, y * 16)
+                    if (chest is None or (not pot.get_collision_rect().colliderect(chest.get_collision_rect())) and
+                        not pot.get_collision_rect().colliderect(switch.get_collision_rect())):
+                        self.objects.append(pot)
+
 
     def render(
         self,

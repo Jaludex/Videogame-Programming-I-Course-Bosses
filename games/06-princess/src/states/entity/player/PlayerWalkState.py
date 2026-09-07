@@ -42,9 +42,15 @@ class PlayerWalkState(BaseEntityState):
             player.change_state("swing-sword")
             return
 
+        if self.entity.bow is not None and self.entity.fire_requested:
+            self.entity.fire_requested = False
+            self.entity.change_state("shot-bow")
+            return
+
         if player.interact_requested:
             player.interact_requested = False
             self.dungeon.current_room.take_adjacent_pot(player)
+            self.dungeon.current_room.open_above_chest(player)
 
             if player.state_machine.current is not self:
                 return

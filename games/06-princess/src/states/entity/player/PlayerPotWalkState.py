@@ -41,6 +41,7 @@ class PlayerPotWalkState(BaseEntityState):
         player = self.entity
 
         player.sword_requested = False
+        player.fire_requested = False
 
         if player.interact_requested:
             player.interact_requested = False

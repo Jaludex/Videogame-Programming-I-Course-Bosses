@@ -24,6 +24,7 @@ from src.commands import (
     STOP_MOVE_RIGHT,
     STOP_MOVE_UP,
     SWORD,
+    FIRE,
 )
 from src.Entity import Entity
 
@@ -37,6 +38,9 @@ class Player(Entity):
         # the same way jump_requested works in 05-super_martian.
         self.sword_requested = False
         self.interact_requested = False
+        self.fire_requested = False
+
+        self.bow = None
 
         self.command_bindings = CommandBindings()
         self.command_bindings.bind("move_left", press=MOVE_LEFT, release=STOP_MOVE_LEFT)
@@ -47,6 +51,7 @@ class Player(Entity):
         self.command_bindings.bind("move_down", press=MOVE_DOWN, release=STOP_MOVE_DOWN)
         self.command_bindings.bind("sword", press=SWORD)
         self.command_bindings.bind("enter", press=INTERACT)
+        self.command_bindings.bind("fire", press=FIRE)
 
     def collides(self, target: Any) -> bool:
         """
