@@ -38,6 +38,8 @@ class PlayState(BaseState):
 
         self.hightlight_hint = False
         self.hint_timer = None
+        self.show_reroll_text = False
+        self.reroll_text_timer = None
 
         self.timer_color = settings.COLOR_BLUE
 
@@ -152,6 +154,17 @@ class PlayState(BaseState):
             self.timer_color,
             shadowed=True,
         )
+
+        if self.show_reroll_text:
+            render_text(
+                surface,
+                f"RE-SHUFFLE",
+                settings.FONTS["medium"],
+                30,
+                170,
+                settings.COLOR_BLUE,
+                shadowed=True
+            )
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if not self.active:
@@ -288,6 +301,18 @@ class PlayState(BaseState):
         while self.possible_next_match is None:
             self.board.reset()
             self.possible_next_match = self.board.search_match()
+            self.show_reroll_text = True
+
+            if self.reroll_text_timer is not None:
+                self.reroll_text_timer.remove()
+
+            def blink_text():
+                self.show_reroll_text = not self.show_reroll_text
+
+            def stop_blinking():
+                self.show_reroll_text = False
+            
+            self.reroll_text_timer = Timer.every(0.5, function=blink_text, limit=8, on_finish=stop_blinking)
 
         def set_hightlight():
             self.hightlight_hint = True
