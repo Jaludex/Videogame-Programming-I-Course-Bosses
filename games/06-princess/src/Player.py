@@ -101,5 +101,6 @@ class Player(Entity):
             self.active = True
             self.state_machine.change("idle")
 
-        
-        Timer.after(settings.SOUNDS["got-item"].get_length(), reactivate_player)
+        mode_duration = settings.SOUNDS["got-item"].get_length()
+        self.go_invulnerable(mode_duration + 1)
+        Timer.after(mode_duration, reactivate_player)
