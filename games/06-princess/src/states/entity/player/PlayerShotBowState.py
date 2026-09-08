@@ -58,7 +58,7 @@ class PlayerShotBowState(BaseEntityState):
         self.entity.current_animation.times_played = 0
 
     def enter(self) -> None:
-        #BOW SOUNDS
+        settings.SOUNDS["bow-pull"].play()
         self.entity.current_animation.reset()
         return
 
@@ -69,6 +69,7 @@ class PlayerShotBowState(BaseEntityState):
 
         if self.entity.current_animation.times_played > 0:
             self.entity.bow.fire(self.entity, self.dungeon.current_room)
+            settings.SOUNDS["bow-shot"].play()
             
             self.entity.current_animation.times_played = 0
             self.entity.change_state("idle")

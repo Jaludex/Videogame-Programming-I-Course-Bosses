@@ -11,7 +11,10 @@ This file contains the class Player.
 from typing import Any
 
 from gale.command import CommandBindings
+from gale.timer import Timer
 from gale.input_handler import InputData
+
+import settings
 
 from src.commands import (
     INTERACT,
@@ -27,6 +30,8 @@ from src.commands import (
     FIRE,
 )
 from src.Entity import Entity
+from src.definitions.player_items import PLAYER_ITEM_DEFS
+from src.GameObject import GameObject
 
 
 class Player(Entity):
@@ -39,6 +44,8 @@ class Player(Entity):
         self.sword_requested = False
         self.interact_requested = False
         self.fire_requested = False
+
+        self.active = True
 
         self.bow = None
 
@@ -70,4 +77,29 @@ class Player(Entity):
         )
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
-        self.command_bindings.dispatch(self, input_id, input_data)
+        if self.active:
+            self.command_bindings.dispatch(self, input_id, input_data)
+
+    def get_item(self, item_key: str):
+        item = PLAYER_ITEM_DEFS.get(item_key)
+        if item is None:
+            return
+
+        self.active = False
+        self.direction = "down"
+
+        object_display = GameObject(item.get("display_object_def"), self.x, 0)
+        object_display.y = self.y - object_display.height / 2
+
+        self.state_machine.change("pot-lift", pot=object_display)
+
+        settings.SOUNDS["got-item"].play()
+
+        def reactivate_player():
+            action = item.get("action")
+            action(self)
+            self.active = True
+            self.state_machine.change("idle")
+
+        
+        Timer.after(settings.SOUNDS["got-item"].get_length(), reactivate_player)

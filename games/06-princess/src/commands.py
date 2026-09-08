@@ -74,6 +74,10 @@ class FireCommand(Command):
     def execute(self, receiver, dt: float = 0.0) -> None:
         receiver.fire_requested = True
 
+class PauseCommand(Command):
+    def execute(self, receiver, dt: float = 0.0) -> None:
+            receiver.pause_requested = True
+
 
 MOVE_LEFT = MoveLeftCommand()
 MOVE_RIGHT = MoveRightCommand()
@@ -86,3 +90,4 @@ STOP_MOVE_DOWN = StopMoveDownCommand()
 SWORD = SwordCommand()
 INTERACT = InteractCommand()
 FIRE = FireCommand()
+PAUSE = PauseCommand()

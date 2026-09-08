@@ -29,6 +29,7 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "sword")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "enter")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_KP_ENTER, "enter")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_x, "fire")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_p, "pause")
 
 TITLE = "The Legend of the Princess"
 
@@ -101,6 +102,9 @@ TEXTURES = {
     "arrows": pygame.image.load(
         BASE_DIR / "assets" / "graphics" / "arrows.png"
     ),
+    "bow": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "bow.png"
+    ),
 }
 
 # Used by Room's gale.tilemap.TileMap: TILE_* ids above are 1-based,
@@ -122,7 +126,8 @@ FRAMES = {
     "character-pot-lift": frames.generate_frames(TEXTURES["character-pot-lift"], 16, 32),
     "character-pot-walk": frames.generate_frames(TEXTURES["character-pot-walk"], 16, 32),
     "chest": frames.generate_frames(TEXTURES["chest"], 16, 19),
-    "arrows": frames_utility.generate_arrow_frames()
+    "arrows": frames_utility.generate_arrow_frames(),
+    "bow": frames.generate_frames(TEXTURES["bow"], 16, 16),
 }
 
 
@@ -152,6 +157,10 @@ SOUNDS = {
         BASE_DIR / "assets" / "sounds" / "heart_taken.wav"
     ),
     "pot-wall": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "pot_wall.wav"),
+    "pause": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "pause.wav"),
+    "got-item": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "got_item.wav"),
+    "bow-shot": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "bow_shot.wav"),
+    "bow-pull": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "bow_pull.wav"),
 }
 
 MUSIC = {
@@ -163,3 +172,4 @@ MUSIC = {
 COLOR_TITLE_SHADOW = (34, 34, 34)
 COLOR_TITLE = (175, 53, 42)
 COLOR_WHITE = (255, 255, 255)
+COLOR_BLACK_TRANSPARENT = (0, 0, 0, 132)

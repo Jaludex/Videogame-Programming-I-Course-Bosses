@@ -22,6 +22,7 @@ import settings
 class GameOverState(BaseState):
     def enter(self, player: TypeVar("Player")) -> None:
         self.player = player
+        pygame.mixer.music.stop()
         pygame.mixer.music.load(settings.MUSIC["game-over"])
         pygame.mixer.music.play()
 

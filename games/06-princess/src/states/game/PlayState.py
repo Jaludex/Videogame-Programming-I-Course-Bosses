@@ -10,8 +10,13 @@ This file contains the class PlayState for the game.
 
 import pygame
 
+from typing import Any, Dict
+
 from gale.input_handler import InputData
 from gale.state import BaseState, StateMachine
+
+from src.commands import PAUSE
+from gale.command import CommandBindings
 
 import settings
 from src.definitions.entity import ENTITY_DEFS
@@ -21,8 +26,25 @@ from src.world.Dungeon import Dungeon
 
 
 class PlayState(BaseState):
-    def enter(self) -> None:
+    def enter(self, **enter_params: Dict[str, Any]) -> None:
+        self.command_bindings = CommandBindings()
+        self.command_bindings.bind("pause", press=PAUSE)
+
+        unpause = enter_params.get("unpause", False)
+
+        if unpause:
+            self.player = enter_params["player"]
+            self.dungeon = enter_params["dungeon"]
+            self.pause_requested = False
+            return
+
+        pygame.mixer.music.load(settings.MUSIC["dungeon"])
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.set_volume(0.5)
+
         definition = ENTITY_DEFS["player"]
+
+        self.pause_requested = False
 
         self.player = Player(
             x=settings.VIRTUAL_WIDTH / 2 - 8,
@@ -61,17 +83,16 @@ class PlayState(BaseState):
         }
         self.player.change_state("idle")
 
-        pygame.mixer.music.load(settings.MUSIC["dungeon"])
-        pygame.mixer.music.play(loops=-1)
-
-    def exit(self) -> None:
-        pygame.mixer.music.stop()
-
     def _on_game_over(self) -> None:
         self.state_machine.change("game-over", player=self.player)
 
     def update(self, dt: float) -> None:
         self.dungeon.update(dt)
+
+        if self.pause_requested:
+            self.pause_requested = False
+            self.pause()
+
 
     def render(self, surface: pygame.Surface) -> None:
         self.dungeon.render(surface)
@@ -97,4 +118,8 @@ class PlayState(BaseState):
             health_left -= 2
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
+        self.command_bindings.dispatch(self, input_id, input_data)
         self.player.on_input(input_id, input_data)
+
+    def pause(self):
+        self.state_machine.change("pause", player=self.player, dungeon=self.dungeon)

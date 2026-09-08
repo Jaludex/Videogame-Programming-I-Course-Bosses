@@ -269,9 +269,10 @@ class Room:
             if player.direction == "up" and obj_col == player_col and obj_row == player_row - 1:
                 obj.state = "open"
 
-                #CINEMATICA CHULA Y LUEGO
+                #Patch to avoid the chest pushing you above him
+                player.y += 1
 
-                player.bow = Bow()
+                player.get_item("bow")
 
     def _generate_walls_and_floors(self) -> None:
         """
@@ -355,7 +356,7 @@ class Room:
         self.objects.append(switch)
 
         chest = None
-        if self.player.bow is None and random.randint(1, 2) == 1:
+        if self.player.bow is None and random.randint(1, 5) == 1:
                     chest_x = random.randint(2, self.width - 2)
                     chest_y = random.randint(2, self.height - 2)
                     chest = GameObject(GAME_OBJECT_DEFS["chest"], chest_x * 16, chest_y * 16)
@@ -376,8 +377,12 @@ class Room:
             for x in range(2, self.width):
                 if random.randint(1, 20) == 1:
                     pot = GameObject(GAME_OBJECT_DEFS["pot"], x * 16, y * 16)
-                    if (chest is None or (not pot.get_collision_rect().colliderect(chest.get_collision_rect())) and
-                        not pot.get_collision_rect().colliderect(switch.get_collision_rect())):
+                    pot_rect = pot.get_collision_rect()
+
+                    chest_ok = chest is None or not pot_rect.colliderect(chest.get_collision_rect())
+                    switch_ok = switch is None or not pot_rect.colliderect(switch.get_collision_rect())
+
+                    if chest_ok and switch_ok:
                         self.objects.append(pot)
 
 
