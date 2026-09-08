@@ -87,9 +87,9 @@ class Player(Entity):
 
         self.active = False
         self.direction = "down"
+        self.held["move_up"] = False
 
-        object_display = GameObject(item.get("display_object_def"), self.x, 0)
-        object_display.y = self.y - object_display.height / 2
+        object_display = GameObject(item.get("display_object_def"), self.x, self.y + self.height / 2)
 
         self.state_machine.change("pot-lift", pot=object_display)
 

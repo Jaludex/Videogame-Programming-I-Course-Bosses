@@ -15,7 +15,7 @@ import pygame
 import settings
 
 _SPEED = 150
-_MAX_TILES = 4
+_MAX_TILES = 6
 
 
 class Projectile:
