@@ -71,7 +71,7 @@ class CharStatsPanel(GalePanel):
             f"DEF: {self.character.defense}",
             f"MAG: {self.character.magic}",
             f"EXP: {int(self.character.current_exp)} / {int(self.character.exp_to_level)}",
-            f"TIM: {self.character.cooldown_time}",
+            f"TMR: {self.character.cooldown_time}",
         ]
 
         for line in stats_lines:
