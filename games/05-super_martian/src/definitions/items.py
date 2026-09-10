@@ -49,6 +49,7 @@ def collide_key_block(block: GameItem, player: Player):
     player.spawn_key_at = (block.x, block.y)
 
     block.collidable = False
+    block.frame_index = 34
     original_y = block.y
     new_y = block.y - (block.height / 2)
 
