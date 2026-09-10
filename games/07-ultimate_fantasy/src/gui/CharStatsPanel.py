@@ -22,16 +22,12 @@ class CharStatsPanel(GalePanel):
         self.character = character
 
     def set_character(self, character: Character) -> None:
-        """
-        Cambia el personaje que se está mostrando en el panel.
-        """
         self.character = character
 
     def render(self, surface: pygame.Surface) -> None:
         if not self.visible or self.character is None:
             return
-
-        # 1. Dibujar fondo del panel
+        
         pygame.draw.rect(surface, (255, 255, 255), self.rect, border_radius=3)
         inner = pygame.Rect(
             int(self.x) + 2, int(self.y) + 2, int(self.width) - 4, int(self.height) - 4
@@ -41,7 +37,6 @@ class CharStatsPanel(GalePanel):
         left_margin = int(self.x) + 12
         current_y = int(self.y) + 12
 
-        # 2. Renderizar sprite y barra de HP
         if self.character.current_animation is not None:
             frame_rect = self.character.current_animation.get_current_frame()
             texture = settings.TEXTURES[self.character.texture]
@@ -68,7 +63,6 @@ class CharStatsPanel(GalePanel):
         font = settings.FONTS.get("small", settings.FONTS.get("medium"))
         text_color = (255, 255, 255)
 
-        # 3. Renderizar Estadísticas Base
         stats_lines = [
             f"{self.character.name}",
             f"LVL: {self.character.level}",
@@ -76,7 +70,8 @@ class CharStatsPanel(GalePanel):
             f"ATK: {self.character.attack}",
             f"DEF: {self.character.defense}",
             f"MAG: {self.character.magic}",
-            f"EXP: {self.character.current_exp} / {self.character.exp_to_level}",
+            f"EXP: {int(self.character.current_exp)} / {int(self.character.exp_to_level)}",
+            f"TIM: {self.character.cooldown_time}",
         ]
 
         for line in stats_lines:

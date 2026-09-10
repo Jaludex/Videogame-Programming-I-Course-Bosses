@@ -157,6 +157,7 @@ ENTITY_DEFS = {
             "attackIV": 5,
             "defenseIV": 5,
             "magicIV": 0,
+            "cooldown_time": 2,
             "actions": [
                 {
                     "name": "Attack",
@@ -181,6 +182,7 @@ ENTITY_DEFS = {
             "attackIV": 7,
             "defenseIV": 4,
             "magicIV": 1,
+            "cooldown_time": 2.7,
             "actions": [
                 {
                     "name": "Attack",
@@ -213,6 +215,7 @@ ENTITY_DEFS = {
             "attackIV": 2,
             "defenseIV": 2,
             "magicIV": 7,
+            "cooldown_time": 5,
             "actions": [
                 {
                     "name": "Heal",
@@ -245,6 +248,7 @@ ENTITY_DEFS = {
             "attackIV": 3,
             "defenseIV": 2,
             "magicIV": 8,
+            "cooldown_time": 4,
             "actions": [
                 {
                     "name": "Flame",
@@ -271,6 +275,7 @@ ENTITY_DEFS = {
             "You, little guys! Go to defeat the west monster and break the curse!",
             "All of you are so nice!",
             "Thank you for taking such a risk! I love you all!",
+            "You should try pressing 'x' to check your status, i don't know what 'x' means but you should do it",
         ],
     },
     "enemies": {
@@ -285,6 +290,7 @@ ENTITY_DEFS = {
                 "baseAttack": 20,
                 "baseDefense": 5,
                 "baseMagic": 0,
+                "cooldown_time": 2,
                 "animations": {
                     "default": {"frames": [4, 5, 6], "interval": 0.3},
                 },
@@ -310,6 +316,7 @@ ENTITY_DEFS = {
                 "baseAttack": 30,
                 "baseDefense": 7,
                 "baseMagic": 0,
+                "cooldown_time": 2,
                 "animations": {
                     "default": {"frames": [4, 5, 6], "interval": 0.15},
                 },
@@ -335,6 +342,7 @@ ENTITY_DEFS = {
                 "baseAttack": 40,
                 "baseDefense": 15,
                 "baseMagic": 2,
+                "cooldown_time": 2.2,
                 "animations": {
                     "default": {"frames": [4, 5, 6], "interval": 0.15},
                 },
@@ -360,6 +368,7 @@ ENTITY_DEFS = {
                 "baseAttack": 60,
                 "baseDefense": 18,
                 "baseMagic": 5,
+                "cooldown_time": 2.5,
                 "animations": {
                     "default": {"frames": [4, 5, 6], "interval": 0.15},
                 },
@@ -385,6 +394,7 @@ ENTITY_DEFS = {
             "baseAttack": 100,
             "baseDefense": 30,
             "baseMagic": 30,
+            "cooldown_time": 3,
             "animations": {
                 "default": {"frames": [4, 5, 6], "interval": 0.15},
             },

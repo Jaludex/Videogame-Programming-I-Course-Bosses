@@ -38,6 +38,9 @@ class BattleEntity(Entity):
 
         self.current_hp: float = self.hp
 
+        self.cooldown_time: float = definition.get("cooldown_time", 3.0)
+        self.cooldown_timer: float = 0.0
+
     def damage(self, amount: float) -> None:
         self.current_hp -= amount
 

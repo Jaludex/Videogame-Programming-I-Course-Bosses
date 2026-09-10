@@ -91,6 +91,7 @@ class BattleState(BaseState):
             positions = ENEMIES_POSITIONS[num_enemies]
 
         for enemy_def, position in zip(defs, positions):
+            base_cooldown = enemy_def.get("cooldown_time", 3.0)
             enemy = Enemy(
                 {
                     "name": enemy_def.get("name", enemy_def["type"].capitalize()),
@@ -108,6 +109,7 @@ class BattleState(BaseState):
                     "width": enemy_def["width"],
                     "height": enemy_def["height"],
                     "animations": enemy_def["animations"],
+                    "cooldown_time": base_cooldown * random.uniform(0.75, 1.25),
                 }
             )
             enemy.state_machine = StateMachine(
@@ -126,9 +128,13 @@ class BattleState(BaseState):
                 continue
 
             width = math.floor(character.width * 1.5)
+            
+            if not hasattr(character, "cooldown_timer"):
+                character.cooldown_timer = 0.0
+
             character.energy_bar = ProgressBar(
                 character.x - (width - character.width) / 2,
-                character.y - 10,
+                character.y - 12,
                 width,
                 3,
                 value=character.current_hp,
@@ -136,9 +142,10 @@ class BattleState(BaseState):
                 color=pygame.Color(189, 32, 32),
                 theme=BAR_THEME,
             )
+            
             character.exp_bar = ProgressBar(
                 character.x - (width - character.width) / 2,
-                character.y - 6,
+                character.y - 8,
                 width,
                 3,
                 value=character.current_exp,
@@ -147,16 +154,37 @@ class BattleState(BaseState):
                 theme=BAR_THEME,
             )
 
+            character.cooldown_bar = ProgressBar(
+                character.x - (width - character.width) / 2,
+                character.y - 4,
+                width,
+                3,
+                value=character.cooldown_timer,
+                max_value=character.cooldown_time,
+                color=pygame.Color(255, 140, 0), 
+                theme=BAR_THEME,
+            )
+
         for enemy in self.enemies:
             width = math.floor(enemy.width * 1.5)
             enemy.energy_bar = ProgressBar(
                 enemy.x - (width - enemy.width) / 2,
-                enemy.y - 10,
+                enemy.y - 8,
                 width,
                 3,
                 value=enemy.current_hp,
                 max_value=enemy.hp,
                 color=pygame.Color(189, 32, 32),
+                theme=BAR_THEME,
+            )
+            enemy.cooldown_bar = ProgressBar(
+                enemy.x - (width - enemy.width) / 2,
+                enemy.y - 4,
+                width,
+                3,
+                value=enemy.cooldown_timer,
+                max_value=enemy.cooldown_time,
+                color=pygame.Color(255, 140, 0), 
                 theme=BAR_THEME,
             )
 
@@ -220,11 +248,13 @@ class BattleState(BaseState):
             if not enemy.dead:
                 enemy.render(surface)
                 enemy.energy_bar.render(surface)
+                enemy.cooldown_bar.render(surface)
 
         for character in self.party.characters.values():
             if not character.dead:
                 character.render(surface)
                 character.energy_bar.render(surface)
                 character.exp_bar.render(surface)
+                character.cooldown_bar.render(surface)
 
         self.bottom_panel.render(surface)

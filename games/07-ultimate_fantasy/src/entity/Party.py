@@ -74,6 +74,7 @@ class Party:
                     "width": ENTITY_WIDTH,
                     "height": ENTITY_HEIGHT,
                     "animations": ENTITY_DEFS["animations"],
+                    "cooldown_time": char_def.get("cooldown_time", 3.0),
                 }
             )
             # Rolls the IV-based stat growth up to the character's starting

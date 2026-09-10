@@ -35,6 +35,7 @@ class Entity:
         self.map_y: int = definition["map_y"]
         self.width: int = definition["width"]
         self.height: int = definition["height"]
+        
 
         self.x: float = (self.map_x - 1) * settings.TILE_SIZE
         # Halfway raised on the tile just to simulate height/perspective.

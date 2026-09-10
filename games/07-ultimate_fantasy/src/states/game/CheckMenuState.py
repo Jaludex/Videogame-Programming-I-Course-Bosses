@@ -32,7 +32,7 @@ class CheckMenuState(BaseState):
             self.menu.panel.x + self.menu.panel.width + 5,
             5,
             100,
-            180,
+            190,
             None,  
         )
 
