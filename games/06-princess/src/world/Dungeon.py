@@ -10,6 +10,7 @@ This file contains the class Dungeon.
 
 import math
 from typing import Callable, TypeVar
+import random
 
 import pygame
 
@@ -17,6 +18,7 @@ from gale.timer import Timer
 
 import settings
 from src.world.Room import Room
+from src.world.BossRoom import BossRoom
 
 
 class Dungeon:
@@ -40,6 +42,8 @@ class Dungeon:
         self.camera_y = 0
         self.shifting = False
 
+        self.level = 1
+
     def begin_shifting(self, shift_x: float, shift_y: float) -> None:
         """
         Prepares for the camera shifting process, kicking off a tween of the
@@ -47,7 +51,12 @@ class Dungeon:
         PlayerWalkState/PlayerPotWalkState.
         """
         self.shifting = True
-        self.next_room = Room(self.player, self.on_game_over)
+
+        if self.player.bow != None and random.randint(1, 4) == 1:
+            self.next_room = BossRoom(self.player, self.on_game_over, self.level)
+            self.level += 1
+        else:
+            self.next_room = Room(self.player, self.on_game_over)
 
         # Start all doors in next room as open until we get in.
         for doorway in self.next_room.doorways:
@@ -149,6 +158,8 @@ class Dungeon:
         self.next_room = None
         self.current_room.adjacent_offset_x = 0
         self.current_room.adjacent_offset_y = 0
+
+        self.current_room.finish_shift()
 
     def update(self, dt: float) -> None:
         # Pause updating if we're in the middle of shifting.

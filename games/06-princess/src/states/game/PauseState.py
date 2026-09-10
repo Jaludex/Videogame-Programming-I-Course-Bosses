@@ -19,6 +19,7 @@ from gale.text import render_text
 import settings
 from src.commands import PAUSE
 from gale.command import CommandBindings
+from gale.timer import Timer
 
 
 class PauseState(BaseState):
@@ -28,10 +29,15 @@ class PauseState(BaseState):
         self.dungeon = enter_params["dungeon"]
         self.pause_requested = False
 
+        Timer.pause()
+
         self.command_bindings = CommandBindings()
         self.command_bindings.bind("pause", press=PAUSE)
         pygame.mixer.music.pause()
         #Pause Sound
+
+    def exit(self):
+        Timer.resume()
 
     def update(self, dt: float) -> None:
         if self.pause_requested:

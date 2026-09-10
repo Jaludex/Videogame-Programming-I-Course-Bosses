@@ -71,8 +71,8 @@ class PlayerSwingSwordState(BaseEntityState):
             self.entity.change_state("swing-sword")
             return
 
-        for entity in self.dungeon.current_room.entities:
-            if entity.collides(self.sword_hitbox):
+        for entity in self.dungeon.current_room.attackable_entities():
+            if entity.collides(self.sword_hitbox) and not entity.invulnerable:
                 entity.damage(1)
                 settings.SOUNDS["hit-enemy"].play()
 

@@ -19,11 +19,12 @@ _MAX_TILES = 6
 
 
 class Projectile:
-    def __init__(self, obj: Any, direction: str) -> None:
+    def __init__(self, obj: Any, direction: str, sender: str = "player") -> None:
         self.obj = obj
         self.direction = direction
         self.distance = 0.0
         self.dead = False
+        self.sender = sender
 
     def get_collision_rect(self) -> pygame.Rect:
         return self.obj.get_collision_rect()

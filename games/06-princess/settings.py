@@ -105,6 +105,12 @@ TEXTURES = {
     "bow": pygame.image.load(
         BASE_DIR / "assets" / "graphics" / "bow.png"
     ),
+    "fireball": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "fireball.png"
+    ),
+    "dragon_boss": pygame.image.load(
+        BASE_DIR / "assets" / "graphics" / "dragon_boss.png"
+    )
 }
 
 # Used by Room's gale.tilemap.TileMap: TILE_* ids above are 1-based,
@@ -128,6 +134,8 @@ FRAMES = {
     "chest": frames.generate_frames(TEXTURES["chest"], 16, 19),
     "arrows": frames_utility.generate_arrow_frames(),
     "bow": frames.generate_frames(TEXTURES["bow"], 16, 16),
+    "fireball": frames.generate_frames(TEXTURES["fireball"], 16, 16),
+    "dragon_boss": frames_utility.generate_dragon_boss_frames(),
 }
 
 
@@ -161,6 +169,7 @@ SOUNDS = {
     "got-item": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "got_item.wav"),
     "bow-shot": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "bow_shot.wav"),
     "bow-pull": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "bow_pull.wav"),
+    "dragon_fire": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "dragon_fire.wav")
 }
 
 MUSIC = {
@@ -173,3 +182,5 @@ COLOR_TITLE_SHADOW = (34, 34, 34)
 COLOR_TITLE = (175, 53, 42)
 COLOR_WHITE = (255, 255, 255)
 COLOR_BLACK_TRANSPARENT = (0, 0, 0, 132)
+
+NECK_PIECES_FOR_DRAGON_BOSS = 3

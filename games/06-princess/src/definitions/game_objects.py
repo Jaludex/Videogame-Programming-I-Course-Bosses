@@ -115,6 +115,17 @@ GAME_OBJECT_DEFS: Dict[str, Dict[str, Any]] = {
         "states": {
             "default": {"frame": 1}
         }
-
+    },
+    "fireball": {
+        "type": "fireball",
+        "texture": "fireball",
+        "frame": 1,
+        "width": 16,
+        "height": 16,
+        "solid": True,
+        "default_state": "default",
+        "states": {
+            "default": {"frame": 1}
+        },
     }
 }

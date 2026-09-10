@@ -49,10 +49,23 @@ class GameObject:
     def update(self, dt: float) -> None:
         pass
 
-    def render(self, surface: pygame.Surface, offset_x: float = 0, offset_y: float = 0) -> None:
+    def render(self, surface: pygame.Surface, offset_x: float = 0, offset_y: float = 0, angle: float = 0) -> None:
         frame_index = self.states[self.state].get("frame", self.frame_index)
-        surface.blit(
-            settings.TEXTURES[self.texture_id],
-            (self.x + offset_x, self.y + offset_y),
-            settings.frame(self.texture_id, frame_index),
-        )
+    
+        full_texture = settings.TEXTURES[self.texture_id]
+        frame_rect = settings.frame(self.texture_id, frame_index)
+        
+        frame_surface = full_texture.subsurface(frame_rect)
+        
+        dest_x = self.x + offset_x
+        dest_y = self.y + offset_y
+
+        if angle != 0:
+            rotated_surface = pygame.transform.rotate(frame_surface, angle)
+            
+            orig_rect = pygame.Rect(dest_x, dest_y, frame_rect.width, frame_rect.height)
+            new_rect = rotated_surface.get_rect(center=orig_rect.center)
+            
+            surface.blit(rotated_surface, new_rect.topleft)
+        else:
+            surface.blit(frame_surface, (dest_x, dest_y))

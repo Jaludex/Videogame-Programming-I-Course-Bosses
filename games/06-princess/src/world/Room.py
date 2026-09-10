@@ -24,6 +24,8 @@ from src.states.entity.EntityIdleState import EntityIdleState
 from src.states.entity.EntityWalkState import EntityWalkState
 from src.world.Doorway import Doorway
 from src.Bow import Bow
+from src.DragonBoss import DragonBoss
+from src.states.entity.boss.BossIdleState import BossIdleState
 
 _ENEMY_TYPES = ["skeleton", "slime", "bat", "ghost", "spider"]
 
@@ -103,6 +105,8 @@ class Room:
         self.objects: List[GameObject] = []
         self._generate_objects()
 
+        self.key = "room"
+
         # Doorways that lead to other dungeon rooms.
         self.doorways = [
             Doorway("top", False, self),
@@ -132,6 +136,9 @@ class Room:
 
         self.player.update(dt)
 
+        if self.player.health <= 0:
+            self.on_game_over()
+
         for entity in self.entities:
             if entity.health <= 0:
                 entity.dead = True
@@ -158,10 +165,8 @@ class Room:
                 self.player.damage(1)
                 self.player.go_invulnerable(1.5)
 
-                if self.player.health == 0:
+                if self.player.dead:
                     self.on_game_over()
-
-        self.entities = [entity for entity in self.entities if not entity.dead]
 
         for obj in list(self.objects):
             obj.update(dt)
@@ -178,20 +183,37 @@ class Room:
 
         for projectile in list(self.projectiles):
             projectile.update(dt)
+            if projectile.dead:
+                self.projectiles.remove(projectile)
+                continue
 
-            for entity in self.entities:
-                if projectile.dead:
-                    break
+            if projectile.sender == "player":
+                for entity in self.entities:
+                    if not entity.dead and projectile.collides(entity):
+                        entity.damage(1)
+                        settings.SOUNDS["hit-enemy"].play()
+                        projectile.dead = True
 
-                if not entity.dead and projectile.collides(entity):
-                    entity.damage(1)
-                    settings.SOUNDS["hit-enemy"].play()
+            elif projectile.sender == "enemy":
+                if not self.player.dead and projectile.collides(self.player):
+                    self.player.damage(1)
+                    settings.SOUNDS["hit-player"].play()
                     projectile.dead = True
 
+            elif projectile.sender == "boss":
+                if not self.player.dead and projectile.collides(self.player):
+                    self.player.dead = True
+                    settings.SOUNDS["hit-player"].play()
+                    projectile.dead = True
+                
             if projectile.dead:
                 self.projectiles.remove(projectile)
 
-    def _push_player_out_of(self, obj: GameObject) -> None:
+        if self.player.dead:
+            self.on_game_over()
+        self.entities = [entity for entity in self.entities if not entity.dead]
+
+    def _push_player_out_of(self, obj) -> None:
         player = self.player
         player_y = player.y + player.height / 2
         player_height = player.height - player.height / 2
@@ -273,6 +295,9 @@ class Room:
                 player.y += 1
 
                 player.get_item("bow")
+
+    def finish_shift(self):
+        pass
 
     def _generate_walls_and_floors(self) -> None:
         """
@@ -356,10 +381,14 @@ class Room:
         self.objects.append(switch)
 
         chest = None
-        if self.player.bow is None and random.randint(1, 5) == 1:
+        if self.player.bow is None and random.randint(1, 4) == 1:
                     chest_x = random.randint(2, self.width - 2)
                     chest_y = random.randint(2, self.height - 2)
                     chest = GameObject(GAME_OBJECT_DEFS["chest"], chest_x * 16, chest_y * 16)
+                    while chest.get_collision_rect().colliderect(switch.get_collision_rect()):
+                        chest_x = random.randint(2, self.width - 2)
+                        chest_y = random.randint(2, self.height - 2)
+                        chest = GameObject(GAME_OBJECT_DEFS["chest"], chest_x * 16, chest_y * 16)
                     self.objects.append(chest)
 
         def open_all_doors() -> None:
@@ -384,6 +413,9 @@ class Room:
 
                     if chest_ok and switch_ok:
                         self.objects.append(pot)
+
+    def attackable_entities(self):
+        return self.entities
 
 
     def render(
