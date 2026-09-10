@@ -85,8 +85,8 @@ class Menu:
 
         if self.cursor is not None and self.list_view.items:
             row_rect = self.list_view.row_rect(self.list_view.selected_index)
-            cursor_x = max(self.panel.width / 3, self.panel.x - 8)
-            self.cursor.render(surface, (cursor_x, row_rect.centery))
+            cursor_x = max(self.panel.width / 4, self.panel.x - 8)
+            self.cursor.render(surface, (cursor_x, row_rect.y))
 
     def navigate(self, direction: Tuple[int, int]) -> None:
         if self.list_view.on_navigate(direction):

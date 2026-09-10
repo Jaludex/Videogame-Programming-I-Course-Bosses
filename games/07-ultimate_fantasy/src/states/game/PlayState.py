@@ -43,6 +43,10 @@ class PlayState(BaseState):
 
             self.state_machine.push(PauseMenuState(self.state_machine), play_state=self)
             return
+        elif input_id == "menu" and input_data.pressed:
+            from src.states.game.CheckMenuState import CheckMenuState
+
+            self.state_machine.push(CheckMenuState(self.state_machine), play_state=self)
 
         self.world.on_input(input_id, input_data)
 
