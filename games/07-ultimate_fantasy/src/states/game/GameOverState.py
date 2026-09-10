@@ -36,7 +36,10 @@ class GameOverState(BaseState):
 
         medium = settings.FONTS["medium"]
         text = medium.render("Your party was defeated!", True, (255, 255, 255))
-        surface.blit(text, (0, 10))
+        rect = text.get_rect(
+            center=(settings.VIRTUAL_WIDTH / 2, settings.VIRTUAL_HEIGHT / 2)
+        )
+        surface.blit(text, rect)
 
         large = settings.FONTS["large"]
         title = large.render("Game Over", True, (255, 255, 255))
