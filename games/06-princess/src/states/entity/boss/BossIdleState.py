@@ -39,8 +39,6 @@ class BossIdleState(BaseEntityState):
 
             Timer.after(1, stop_firing_head)
 
-            print("FireBall")
-
             self.entity.fire(room)
     
     def render(self, surface: pygame.Surface) -> None:

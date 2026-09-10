@@ -99,7 +99,6 @@ class DragonBoss(Entity):
                     [(self, {"head_x": self.new_head_x, "head_y": self.new_head_y})],
                     on_finish=reset_head_timer
                 )   
-                print("Moves head")
 
     def make_weak(self):
         if not self.weak:

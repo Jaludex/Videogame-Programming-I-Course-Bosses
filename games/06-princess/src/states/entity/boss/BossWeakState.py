@@ -54,9 +54,6 @@ class BossWeakState(BaseEntityState):
             [(self.entity, {"head_x": self.new_head_x, "head_y": self.new_head_y})],
         )   
 
-        print("Moves head down")
-
-
 
     def render(self, surface: pygame.Surface) -> None:
         anim = self.entity.current_animation
