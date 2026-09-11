@@ -107,7 +107,7 @@ ARCHETYPES: Dict[str, Dict[str, Any]] = {
 # equivalent, it never takes damage.
 BIRD = {
     "radius": 35,
-    "mass": 2500,
+    "mass": 1500,
     "friction": 1.0,
     "restitution": 0.1,
     "angular_damping": 0.7,

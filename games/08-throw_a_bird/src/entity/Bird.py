@@ -1,28 +1,9 @@
-"""
-ISPPV1 2023
-Study Case: Throw a Bird
-
-Author: Alejandro Mujica
-alejandro.j.mujic4@gmail.com
-
-This file contains the class Bird: the parrot sitting in the slingshot,
-ported from main.script + the parrot.go. It is a plain dynamic circle
-body -- heavy, invulnerable (no destructible.script attached, matching
-the original) -- driven entirely by PlayState (aiming/panning/flinging
-live there, since in the original they are main.script's own concerns,
-not the parrot's).
-"""
-
 import math
-
 import pygame
-
 from gale.physics.shapes import CircleShape
 from gale.physics.world import World
-
 import settings
 from src.definitions.entity import BIRD, density_for_circle
-
 
 class Bird:
     def __init__(self, world: World, x: float, y: float) -> None:
@@ -45,20 +26,33 @@ class Bird:
 
         self.initial_position = pygame.Vector2(x, y)
         self.image = settings.TEXTURES[BIRD["sprite"]]
+        
+        self.has_collided = False
 
     @property
     def position(self) -> pygame.Vector2:
         return self.body.position
 
     def reset(self) -> None:
-        """
-        Put the bird back to rest in the slingshot, ready for another
-        throw -- ported from main.script's idle_frames > 100 branch.
-        """
         self.body.position = self.initial_position
         self.body.angle = 0.0
         self.body.velocity = (0, 0)
         self.body.angular_velocity = 0.0
+        self.has_collided = False
+
+    def split(self, world: World):
+        bird_speed = pygame.Vector2(self.body.velocity.x, self.body.velocity.y)
+
+        bird_1_speed = bird_speed.rotate(15)
+        bird_2_speed = bird_speed.rotate(-15)
+
+        bird_up = Bird(world, self.position.x, self.position.y)
+        bird_up.body.velocity = (bird_1_speed.x, bird_1_speed.y)
+
+        bird_down = Bird(world, self.position.x, self.position.y)
+        bird_down.body.velocity = (bird_2_speed.x, bird_2_speed.y)
+
+        return [bird_up, bird_down]
 
     def render(self, surface: pygame.Surface, camera) -> None:
         diameter = max(1, round(self.radius * 2 * camera.zoom))
