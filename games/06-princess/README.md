@@ -12,6 +12,7 @@ Things added:
     - Shoots fireball towards you, they instakill you
     - Moves his head around
     - Invulnerable until you shot an arrow to his head, then becomes weak for you to use your sword
+    - After being weak, it shakes for a second and then moves in a random direction, returning to idle
 
 
 Minor Changes from base game
