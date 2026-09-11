@@ -25,6 +25,7 @@ from src.world.Doorway import Doorway
 from src.DragonBoss import DragonBoss
 from src.states.entity.boss.BossIdleState import BossIdleState
 from src.states.entity.boss.BossWeakState import BossWeakState
+from src.states.entity.boss.BossWalkState import BossWalkState
 
 _DOORWAY_ZONES = {
     "left": pygame.Rect(
@@ -91,7 +92,8 @@ class BossRoom(Room):
         self.finished = False
 
     def finish_shift(self):
-        self.entities[0].active = True
+        for entity in self.entities:
+            entity.active = True
         
 
     def update(self, dt: float) -> None:
@@ -200,7 +202,8 @@ class BossRoom(Room):
             # Configuración de estados y agregado a la lista fuera del bucle de validación
             boss.state_machine.states = {
                 "idle": lambda sm, e=boss: BossIdleState(e, sm),
-                "weak": lambda sm, e=boss: BossWeakState(e, sm)
+                "weak": lambda sm, e=boss: BossWeakState(e, sm),
+                "walk": lambda sm, e=boss: BossWalkState(e, sm)
             }
             boss.change_state("idle")
 

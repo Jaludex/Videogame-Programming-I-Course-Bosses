@@ -98,7 +98,13 @@ class DragonBoss(Entity):
                     1,
                     [(self, {"head_x": self.new_head_x, "head_y": self.new_head_y})],
                     on_finish=reset_head_timer
-                )   
+                )
+
+    def stop_head_movement(self):
+        if self.move_head_tween is not None:
+            self.move_head_tween.remove()
+            self.move_head_tween.on_finish()
+            
 
     def make_weak(self):
         if not self.weak:

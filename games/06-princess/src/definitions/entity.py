@@ -205,7 +205,7 @@ ENTITY_DEFS: Dict[str, Dict[str, Any]] = {
         "texture": "dragon_boss",
         "animations": {
             "idle-normal": {"frames": [1, 2], "interval": 3, "texture": "dragon_boss"},
-            "walking": {"frames": [1, 2], "interval": 0.5, "texture": "dragon_boss"},
+            "walking": {"frames": [1, 2], "interval": 0.2, "texture": "dragon_boss"},
             "idle-weak": {"frames": [6, 7], "interval": 0.5, "texture": "dragon_boss"}, 
         }
     }

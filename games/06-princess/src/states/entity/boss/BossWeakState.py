@@ -22,9 +22,9 @@ class BossWeakState(BaseEntityState):
     def enter(self) -> None:
         self.entity.change_animation("idle-weak")
 
-        def return_to_idle():
-            self.state_machine.change("idle")
-        self.weak_timer = Timer.after(5, return_to_idle)
+        def go_for_a_walk():
+            self.state_machine.change("walk")
+        self.weak_timer = Timer.after(5, go_for_a_walk)
 
         # if self.entity.move_head_tween is not None:
         #     self.entity.move_head_tween.on_finish()
@@ -36,8 +36,6 @@ class BossWeakState(BaseEntityState):
         self.entity.fire_wait_timer = 0
 
         self.move_head_down()
-        
-
 
     def process_ai(self, room: TypeVar("Room"), dt: float) -> None:
         pass
