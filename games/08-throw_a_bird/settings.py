@@ -112,3 +112,5 @@ TEXTURES = {
 # than tiling a 1x1 image thousands of times, its color is sampled once
 # and used to fill a plain rect (see src/world/Level.py).
 GROUND_FILL_COLOR = _load("world", "ground1px.png").get_at((0, 0))
+
+EXTRA_BIRDS_SEPARATION = 15

@@ -43,8 +43,8 @@ class Bird:
     def split(self, world: World):
         bird_speed = pygame.Vector2(self.body.velocity.x, self.body.velocity.y)
 
-        bird_1_speed = bird_speed.rotate(15)
-        bird_2_speed = bird_speed.rotate(-15)
+        bird_1_speed = bird_speed.rotate(settings.EXTRA_BIRDS_SEPARATION)
+        bird_2_speed = bird_speed.rotate(-settings.EXTRA_BIRDS_SEPARATION)
 
         bird_up = Bird(world, self.position.x, self.position.y)
         bird_up.body.velocity = (bird_1_speed.x, bird_1_speed.y)
