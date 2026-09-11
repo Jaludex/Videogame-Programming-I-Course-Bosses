@@ -1,4 +1,4 @@
-# Boss 05 - Princess
+# Boss 06 - Princess
 
 Things added:
 
