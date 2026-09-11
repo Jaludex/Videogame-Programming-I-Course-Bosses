@@ -211,6 +211,10 @@ class PlayState(BaseState):
             self._on_touch(input_data)
         elif input_id == "touch_motion":
             self._on_touch_motion(input_data)
+        elif input_id == "split" and input_data.pressed:
+            if self.flinging and not self.has_split and not self.birds[0].has_collided:
+                self.has_split = True
+                self.birds.extend(self.birds[0].split(self.world))
 
     def _mouse_to_virtual(self, position) -> pygame.Vector2:
         scale_x = settings.VIRTUAL_WIDTH / settings.WINDOW_WIDTH

@@ -23,6 +23,8 @@ from gale import input_handler
 
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_ESCAPE, "quit")
 
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "split")
+
 # The only input this game needs: the primary mouse button, used both to
 # aim (drag starting near the bird) and to pan the camera (drag starting
 # anywhere else), and continuous motion while it is held down. See
