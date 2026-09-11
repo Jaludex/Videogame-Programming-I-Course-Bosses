@@ -217,7 +217,10 @@ class PlayState(BaseState):
             self.pressed_position = position
             world_position = pygame.Vector2(self.camera.screen_to_world(position))
 
-            if (world_position - self.bird.position).length() < AIM_GRAB_RADIUS:
+            if (
+                not self.flinging
+                and (world_position - self.bird.position).length() < AIM_GRAB_RADIUS
+            ):
                 self.aiming = True
                 self.aim_offset = pygame.Vector2()
             else:
@@ -232,6 +235,9 @@ class PlayState(BaseState):
 
     def _fling(self) -> None:
         pull = self.bird.initial_position - self.bird.position
+        if pull.length() < 5:
+            self.bird.reset()
+            return
         # Scaled by the bird's own mass so it cancels out of the
         # resulting delta-v -- see the FLING_IMPULSE_SCALE docstring.
         scale = FLING_IMPULSE_SCALE * self.bird.mass
