@@ -162,6 +162,7 @@ class TakeTurnState(BaseState):
         character.cooldown_timer = 0
 
         if character.dead:
+            character.current_hp = 0
             self._inc_exp(index + 1, opponent_level)
             return
 

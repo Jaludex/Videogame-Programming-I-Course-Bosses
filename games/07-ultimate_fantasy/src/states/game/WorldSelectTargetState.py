@@ -27,26 +27,14 @@ class WorldSelectTargetState(BaseState):
         self.panel = Panel(panel_x, panel_y, panel_width, panel_height)
 
         self.current_selection = 0
-        for i, target in enumerate(self.targets):
-            if not target.dead:
-                self.current_selection = i
-                break
 
-    def _next_alive(self) -> None:
-        n = len(self.targets)
-        for step in range(1, n + 1):
-            i = (self.current_selection + step) % n
-            if not self.targets[i].dead:
-                self.current_selection = i
-                return
+    def _next_target(self) -> None:
+        if self.targets:
+            self.current_selection = (self.current_selection + 1) % len(self.targets)
 
-    def _prev_alive(self) -> None:
-        n = len(self.targets)
-        for step in range(1, n + 1):
-            i = (self.current_selection - step) % n
-            if not self.targets[i].dead:
-                self.current_selection = i
-                return
+    def _prev_target(self) -> None:
+        if self.targets:
+            self.current_selection = (self.current_selection - 1) % len(self.targets)
 
     def update(self, dt: float) -> None:
         for target in self.targets:
@@ -58,13 +46,24 @@ class WorldSelectTargetState(BaseState):
             return
 
         if input_id in ["move_left", "move_up"]:
-            self._prev_alive()
+            self._prev_target()
         elif input_id in ["move_right", "move_down"]:
-            self._next_alive()
+            self._next_target()
         elif input_id == "enter":
-            target = self.targets[self.current_selection]
-            self.state_machine.pop()
-            self.on_target_selected(target)
+            if self.targets:
+                target = self.targets[self.current_selection]
+                self.state_machine.pop()
+                was_dead = target.dead
+                self.on_target_selected(target)
+                if was_dead != target.dead:
+                    self._reposition_revived_ally(target)
+
+    def _reposition_revived_ally(self, target):
+        party = self.play_state.world.party
+        leader = party.first_alive()
+    
+        if leader is not None:
+            party.set_position(leader.map_x, leader.map_y, leader.direction)
 
     def render(self, surface: pygame.Surface) -> None:
         self.panel.render(surface)

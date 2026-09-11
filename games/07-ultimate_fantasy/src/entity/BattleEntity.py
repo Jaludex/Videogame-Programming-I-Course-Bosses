@@ -48,8 +48,8 @@ class BattleEntity(Entity):
             self.dead = True
 
     def heal(self, amount: float) -> None:
-        if not self.dead:
-            self.current_hp = min(self.hp, self.current_hp + amount)
+        self.current_hp = min(self.hp, self.current_hp + amount)
+        self.dead = False
 
     def compute_attack(self) -> int:
         return math.floor(random.random() / 2 * self.attack + random.random() / 4 * self.magic)
