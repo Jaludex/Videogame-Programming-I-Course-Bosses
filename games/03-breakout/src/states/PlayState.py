@@ -293,7 +293,7 @@ class PlayState(BaseState):
     def roll_for_powerup(self, brick):
         rolled_number = random.random()
         key_to_append: str = "none"
-        if rolled_number <= 0.1:
+        if rolled_number <= 0.15:
             rolled_number = random.randint(0, 4)
             if rolled_number <= 1:
                 key_to_append = "TwoMoreBall"
