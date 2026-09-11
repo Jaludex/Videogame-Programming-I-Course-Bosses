@@ -27,15 +27,16 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "space")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "enter")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_KP_ENTER, "enter")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_p, "pause")
-input_handler.InputHandler.set_keyboard_action(input_handler.KEY_c, "continue")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_x, "menu")
 
 TITLE = "Ultimate Fantasy"
 
-# gale.save.SaveManager slot used for this game's single save file.
-SAVE_SLOT = "slot1"
+SAVE_SLOTS = ["slot1", "slot2", "slot3"]
+
 
 BASE_DIR = pathlib.Path(__file__).parent
+
+SAVE_DIR = BASE_DIR / "saves"
 
 VIRTUAL_WIDTH = 384
 VIRTUAL_HEIGHT = 224

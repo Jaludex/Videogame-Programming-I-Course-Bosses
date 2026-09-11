@@ -243,9 +243,14 @@ class TakeTurnState(BaseState):
         if self.battle_state.final_boss:
 
             def on_complete() -> None:
-                settings.SOUNDS["the-end"].play()
                 self.state_machine.pop()
                 self.state_machine.pop()
+
+                settings.stop_music("battle")
+                settings.stop_music("world")
+                settings.stop_music("town")
+
+                settings.play_music("the-end")
 
                 from src.states.game.TheEndState import TheEndState
 

@@ -43,12 +43,10 @@ class World:
         }
         self.current_region_name = "center"
 
+        self.dirty = False
+
         self.party = Party(party_genders, self)
 
-        # World is constructed both for a new game (SelectCharacterState
-        # already stopped "intro") and for a loaded save (StartState's
-        # "continue" path never does), so stop it here too -- redundant
-        # in the first case, the actual fix in the second.
         settings.stop_music("intro")
         settings.play_music("town")
 
@@ -131,10 +129,17 @@ class World:
         self.party.update(dt)
 
     def on_input(self, input_id: str, input_data: Any) -> None:
+        if input_data.pressed:
+            self.dirty = True
+        
         self.party.on_input(input_id, input_data)
 
         if input_id == "space" and input_data.pressed:
             self._try_interact()
+
+    def freeze_party(self) -> None:
+        for key in self.party.held:
+            self.party.held[key] = False
 
     def _try_interact(self) -> None:
         from src.states.game.DialogueState import DialogueState
@@ -150,6 +155,7 @@ class World:
 
             if dx <= 1 and dy <= 1:
                 text = npc.on_interact()
+                self.freeze_party()
                 self.stack.push(DialogueState(self.stack), text=text)
                 return
 

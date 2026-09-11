@@ -5,29 +5,53 @@ Study Case: Ultimate Fantasy (RPG)
 Author: Alejandro Mujica
 alejandro.j.mujic4@gmail.com
 
-This file contains the class StartState: the title screen.
+This file contains the class StartState: the title screen. A "Nueva
+partida"/"Cargar partida" Menu replaces the original's raw
+Enter/"press C" key prompts -- "Cargar partida" opens the same
+SlotSelectState/stat-card picker "Guardar partida" uses from the pause
+menu (see PauseMenuState), instead of always resuming the single fixed
+save slot the game used to have.
 """
 
 from typing import Any
 
 import pygame
 
-from gale.save import SaveError, SaveManager
 from gale.state import BaseState
 
 import settings
+from src.gui.Menu import Menu
 
 
 class StartState(BaseState):
     def enter(self) -> None:
         settings.play_music("intro")
-        self.has_save = SaveManager().exists(settings.SAVE_SLOT)
+
+        self.menu = Menu(
+            settings.VIRTUAL_WIDTH / 2 - 70,
+            settings.VIRTUAL_HEIGHT - 76,
+            140,
+            48,
+            items=[
+                ("New game", self._start_new_game),
+                ("Load game", self._load_game),
+            ],
+            font=settings.FONTS["small"],
+        )
+
+    def update(self, dt: float) -> None:
+        self.menu.update(dt)
 
     def on_input(self, input_id: str, input_data: Any) -> None:
-        if input_id == "enter" and input_data.pressed:
-            self._start_new_game()
-        elif input_id == "continue" and input_data.pressed and self.has_save:
-            self._continue_game()
+        if not input_data.pressed:
+            return
+
+        if input_id == "move_up":
+            self.menu.navigate((0, -1))
+        elif input_id == "move_down":
+            self.menu.navigate((0, 1))
+        elif input_id == "enter":
+            self.menu.confirm()
 
     def _start_new_game(self) -> None:
         from src.states.game.FadeInState import FadeInState
@@ -56,22 +80,35 @@ class StartState(BaseState):
             on_complete=on_complete,
         )
 
-    def _continue_game(self) -> None:
+    def _load_game(self) -> None:
+        from src.states.game.SlotSelectState import SlotSelectState
+
+        self.state_machine.push(
+            SlotSelectState(self.state_machine),
+            mode="load",
+            on_select=self._do_load,
+            on_close=self._close_slot_select,
+        )
+
+    def _close_slot_select(self) -> None:
+        self.state_machine.pop()
+
+    def _do_load(self, slot: str) -> None:
+        from gale.save import SaveError, SaveManager
         from src.states.game.FadeInState import FadeInState
         from src.states.game.PlayState import PlayState
 
         try:
-            save_data = SaveManager().load(settings.SAVE_SLOT)
+            save_data = SaveManager().load(slot)
         except SaveError:
-            # A corrupted or unreadable save is treated the same as not
-            # having pressed "continue" at all; the title screen is left
-            # exactly as it was.
+            # Corrupted/unreadable: leave the slot picker open as-is.
             return
 
         party_genders = {int(k): v for k, v in save_data["party"]["genders"].items()}
 
         def on_complete() -> None:
-            self.state_machine.pop()
+            self.state_machine.pop()  # SlotSelectState
+            self.state_machine.pop()  # this StartState
             self.state_machine.push(
                 PlayState(self.state_machine),
                 party_genders=party_genders,
@@ -108,17 +145,4 @@ class StartState(BaseState):
         )
         surface.blit(title, title_rect)
 
-        prompt_font = settings.FONTS["medium"]
-        prompt_text = "PRESS ENTER" if not self.has_save else "PRESS ENTER FOR A NEW GAME"
-        prompt = prompt_font.render(prompt_text, True, (255, 255, 255))
-        prompt_rect = prompt.get_rect(
-            center=(settings.VIRTUAL_WIDTH / 2, settings.VIRTUAL_HEIGHT - 40)
-        )
-        surface.blit(prompt, prompt_rect)
-
-        if self.has_save:
-            continue_prompt = prompt_font.render("PRESS C TO CONTINUE", True, (255, 255, 255))
-            continue_rect = continue_prompt.get_rect(
-                center=(settings.VIRTUAL_WIDTH / 2, settings.VIRTUAL_HEIGHT - 24)
-            )
-            surface.blit(continue_prompt, continue_rect)
+        self.menu.render(surface)

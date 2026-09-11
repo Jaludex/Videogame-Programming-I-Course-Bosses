@@ -23,8 +23,7 @@ class PartyWalkState(PartyBaseState):
     def enter(self, direction: str) -> None:
         self.direction = direction
 
-        if not self._check_for_encounter():
-            self._attempt_move()
+        self._attempt_move()
 
     @staticmethod
     def _delta(direction: str) -> Tuple[int, int]:
@@ -44,15 +43,10 @@ class PartyWalkState(PartyBaseState):
         if leader is None:
             return False
 
-        dx, dy = self._delta(self.direction)
-        to_x, to_y = leader.map_x + dx, leader.map_y + dy
 
         region = party.world.current_region()
 
-        if not (1 <= to_x <= region.tile_width and 1 <= to_y <= region.tile_height):
-            return False
-
-        gid = region.tilemap.get_gid("grass", to_y - 1, to_x - 1)
+        gid = region.tilemap.get_gid("grass", leader.map_y - 1, leader.map_x - 1)
 
         if gid != settings.TILE_IDS["tall-grass"]:
             return False
@@ -204,6 +198,9 @@ class PartyWalkState(PartyBaseState):
             last_tween.finish(self._on_step_finished)
 
     def _on_step_finished(self) -> None:
+        if self._check_for_encounter():
+            return
+
         held = self.party.held
 
         if held["move_left"]:

@@ -16,6 +16,7 @@ import pygame
 from gale.state import BaseState
 
 import settings
+from src.text_utils import wrap_text
 
 
 class TheEndState(BaseState):
@@ -34,13 +35,21 @@ class TheEndState(BaseState):
         surface.fill((0, 0, 0))
 
         medium = settings.FONTS["medium"]
-        text = medium.render(
+        message = (
             "The man-eater flower has been defeated and the curse has been "
-            "broken. Thanks!",
-            True,
-            (255, 255, 255),
+            "broken. Thanks!"
         )
-        surface.blit(text, (0, 10))
+        # 12px of margin on each side -- rendering right up to the two
+        # screen edges reads as cramped once the text is wide enough to
+        # need wrapping at all.
+        max_width = settings.VIRTUAL_WIDTH - 24
+        y = 10
+
+        for line in wrap_text(medium, message, max_width):
+            text = medium.render(line, True, (255, 255, 255))
+            rect = text.get_rect(center=(settings.VIRTUAL_WIDTH / 2, y + text.get_height() / 2))
+            surface.blit(text, rect)
+            y += text.get_height()
 
         large = settings.FONTS["large"]
         title = large.render("The end", True, (255, 255, 255))

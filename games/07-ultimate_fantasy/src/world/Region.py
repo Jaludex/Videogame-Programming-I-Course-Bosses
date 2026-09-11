@@ -40,6 +40,10 @@ class Region:
         self.is_town: bool = definition.get("is_town", False)
         self.num_npcs: int = random.randint(2, 4) if self.is_town else 0
         self.npcs = []
+        self._available_npc_names = {
+            gender: list(ENTITY_DEFS["npcs"][gender]["names"])
+            for gender in ("male", "female")
+        }
 
         self.tilemap = TileMap(
             settings.TILE_SIZE, settings.TILE_SIZE, self.tile_width, self.tile_height
@@ -165,7 +169,7 @@ class Region:
 
         gender = "male" if random.random() < 0.5 else "female"
 
-        names = ENTITY_DEFS["npcs"][gender]["names"]
+        names = self._available_npc_names[gender]
         name = names.pop(random.randrange(len(names)))
 
         npc = NPC(
